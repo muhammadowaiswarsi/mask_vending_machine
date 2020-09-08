@@ -1,0 +1,33 @@
+.donutchart-track{
+    fill: transparent;
+    stroke-width: 26;
+  }
+  .donutchart-indicator {
+    fill: transparent;
+    stroke-width: 26;
+    stroke-dasharray: 0 10000;
+    transition: stroke-dasharray .3s ease;
+  }
+  
+  .donutchart {
+    margin: 0 auto;
+    border-radius: 50%;
+    display: block;
+  }
+  
+  
+  .donutchart-text{
+    font-family: 'Roboto';
+  }
+  .donutchart-text-val{
+    font-size: 42px;
+    padding-bottom: 10px;
+  }
+  .donutchart-text-label {
+    display: inline-block;
+    font-size:19px;
+    margin-top: 6px;
+  }
+  
+  
+  

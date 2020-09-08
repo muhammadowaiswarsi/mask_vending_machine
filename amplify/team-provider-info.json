@@ -1,0 +1,31 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-maskvendingmachinesa-dev-20939-authRole",
+            "UnauthRoleArn": "arn:aws:iam::399337185995:role/amplify-maskvendingmachinesa-dev-20939-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::399337185995:role/amplify-maskvendingmachinesa-dev-20939-authRole",
+            "Region": "eu-central-1",
+            "DeploymentBucketName": "amplify-maskvendingmachinesa-dev-20939-deployment",
+            "UnauthRoleName": "amplify-maskvendingmachinesa-dev-20939-unauthRole",
+            "StackName": "amplify-maskvendingmachinesa-dev-20939",
+            "StackId": "arn:aws:cloudformation:eu-central-1:399337185995:stack/amplify-maskvendingmachinesa-dev-20939/73743480-f14e-11ea-ad02-0a5d2466af98",
+            "AmplifyAppId": "dscvemkb65p4g"
+        },
+        "categories": {
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "dscvemkb65p4g",
+                    "type": "manual"
+                }
+            },
+            "auth": {
+                "maskvendingmachinesa0e30f0d0": {}
+            },
+            "function": {
+                "maskvendingmachinesa0e30f0d0PostConfirmation": {
+                    "GROUP": ""
+                }
+            }
+        }
+    }
+}

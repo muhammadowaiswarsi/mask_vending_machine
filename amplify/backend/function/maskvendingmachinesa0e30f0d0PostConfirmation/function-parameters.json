@@ -1,0 +1,17 @@
+{
+  "trigger": true,
+  "modules": [
+    "add-to-group"
+  ],
+  "parentResource": "maskvendingmachinesa0e30f0d0",
+  "functionName": "maskvendingmachinesa0e30f0d0PostConfirmation",
+  "resourceName": "maskvendingmachinesa0e30f0d0PostConfirmation",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/utils/../triggers/PostConfirmation",
+  "triggerTemplate": "PostConfirmation.json.ejs",
+  "roleName": "maskvendingmachinesa0e30f0d0PostConfirmation",
+  "skipEdit": true,
+  "GROUP": "",
+  "triggerEventPath": "PostConfirmation.event.json"
+}
