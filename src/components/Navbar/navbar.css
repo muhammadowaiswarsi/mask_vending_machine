@@ -1,11 +1,17 @@
 .navbar {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     width: 100px;
     padding: 3em 0.8em;
     height: 100vh;
 }
-.machine div, .money div {
+.navbar-upper-part {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.machine div, .money div, .settings div {
     width: 100%;
     height: 80px;
     display: flex;
@@ -16,6 +22,8 @@
     box-sizing: border-box;
     overflow: hidden;
     padding: 1em;
+}
+.machine, .money, .settings {
     cursor: pointer;
 }
 .active {

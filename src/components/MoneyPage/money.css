@@ -1,0 +1,228 @@
+.money-page-container {
+  padding: 5em;
+  background-color: #e9e9e9e3;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sales-figure {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 30px;
+  padding: 0.5em 1.5em;
+  padding-right: 8em;
+  padding-bottom: 1.7em;
+  box-shadow: 1px 3px 8px rgb(161, 161, 161);
+  margin: 1.5em 0;
+  background-color: white;
+}
+.sales-figure > div {
+  padding: 1em 0;
+}
+.sales-headings {
+  font-size: 2em;
+  color: #383838;
+}
+.sales-values {
+  font-size: 4em;
+  font-weight: 400;
+  color: #383737;
+}
+.sales-num-values {
+  font-weight: 600 !important;
+  letter-spacing: 2px;
+}
+.tenant-option {
+  width: 100%;
+  border-radius: 30px;
+  padding: 0.5em 1.5em;
+  padding-right: 8em;
+  padding-bottom: 1.7em;
+  box-shadow: 1px 3px 8px rgb(161, 161, 161);
+  margin: 1.5em 0;
+  background-color: white;
+}
+.tenant-option .headings {
+  font-size: 2.5em;
+  text-align: left;
+  color: #383838;
+  margin-bottom: 1.7em;
+}
+.tenant-body {
+  font-size: 1.3em;
+}
+.tenant-body .select-all {
+  display: flex;
+  margin-bottom: 35px;
+}
+.tenant-body .select-all p {
+  position: relative;
+  left: 30px;
+  top: 1px;
+}
+.tenant-body .round {
+  position: relative;
+}
+
+.tenant-body .round label {
+  background-color: #fff;
+  box-sizing: border-box;
+  font-weight: 700;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 28px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 28px;
+}
+
+.tenant-body .round label:after {
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 6px;
+  left: 7px;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.tenant-body .round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.tenant-body .round input[type="checkbox"]:checked + label {
+  background-color: black;
+  border-color: black;
+}
+
+.tenant-body .round input[type="checkbox"]:checked + label:after {
+  opacity: 1;
+}
+.tenant-bottom-part {
+  display: flex;
+  justify-content: space-between;
+}
+.tenant-list-body {
+    width: 45%;
+    overflow: auto;
+}
+.tenant-list-part {
+  max-height: 400px;
+  overflow: auto;
+  min-width: 360px;
+}
+.tenant-list-part::-webkit-scrollbar {
+  width: 0.6em;
+}
+.tenant-list-part::-webkit-scrollbar-thumb {
+  box-shadow: inset 10px 0 6px #c3c3c3;
+  border-radius: 26px;
+}
+.tenant-list-headings {
+  display: flex;
+  margin-bottom: 15px;
+}
+.tenant-list-headings p:first-child,
+.tenant-lists p:first-child {
+  width: 4%;
+}
+.tenant-list-headings p,
+.tenant-lists p {
+  width: 32%;
+}
+.tenant-lists {
+  display: flex;
+  padding: 0.35em 0;
+}
+.tenant-list-footer {
+    height: 80px;
+    width: 90%;
+    top: -40px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.541);
+    margin-bottom: 10px;
+}
+.tenant-changing-part {
+    padding-left: 3em;
+    width: 45%;
+    margin: 0 auto;
+}
+.tenant-changing-part p {
+    font-size: 1.5em;
+    font-weight: 500;
+}
+.tenant-changing-part>div {
+    display: flex;
+    justify-content: space-around;
+    padding: 1em 0;
+}
+.tenant-changing-part>div span {
+    position: relative;
+    left: -110px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+.tenant-changing-part input {
+    border: 0;
+    outline: none;
+    padding: 0.5em;
+    border-bottom: 3px solid black;
+}
+.tenant-changing-part .set-changes button {
+    border-radius: 30px;
+    padding: 0.4em;
+    background-color: black;
+    color: white;
+    border: none;
+    width: 50%;
+    min-width: 250px;
+    font-size: 1.7em;
+    cursor: pointer;
+    outline: none;
+}
+@media screen and (max-width: 1300px) {
+  .sales-figure {
+    padding-right: 0.5em;
+  }
+  .sales-figure > div {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 850px) {
+  .sales-figure {
+    padding-right: 0.5em;
+  }
+  .sales-figure > div {
+    width: 100%;
+  }
+  .sales-headings {
+    font-size: 1.2em;
+    color: #383838;
+  }
+  .sales-values {
+    font-size: 2.8em;
+    font-weight: 400;
+    color: #383737;
+  }
+  .money-page-container {
+    padding: 1em;
+  }
+.tenant-bottom-part {
+    display: block;
+  }
+  .tenant-list-body {
+      width: 90%;
+      margin: auto;
+  }
+  .tenant-option {
+      padding-right: 1.5em;
+  }
+}
