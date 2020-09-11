@@ -13,7 +13,7 @@ Amplify.configure(awsconfig);
 const AuthStateApp = () => {
   const [authState, setAuthState] = React.useState();
   const [user, setUser] = React.useState();
-  const [navselection, setnavselection] = useState("money")
+  const [navselection, setnavselection] = useState("machine")
 
   const selectNav = (data) => {
     setnavselection(data)
@@ -32,8 +32,8 @@ const AuthStateApp = () => {
       <div className="container">
 
       <Navbar selectNav={selectNav} />
-      {/* <div>Hello, {user?.attributes?.email}</div> */}
-      {/* <AmplifySignOut /> */}
+      {/* <div>Hello, {user?.attributes?.email}</div>
+      <AmplifySignOut /> */}
       {navselection === "machine" ? 
       <MachinePage  />
       :
@@ -42,7 +42,9 @@ const AuthStateApp = () => {
       </div>
     </div>
   ) : (
-    <AmplifyAuthenticator />
+    <div className="authentication-page">
+      <AmplifyAuthenticator />
+    </div>
   );
 };
 

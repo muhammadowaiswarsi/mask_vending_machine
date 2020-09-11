@@ -2,63 +2,93 @@ import React, { useState } from "react";
 import "./money.css";
 
 export default function MoneyPage() {
-  const [lists] = useState([
+  const [allChecked, setallChecked] = useState(false)
+  const checkAllCheckboxes = () => {
+    console.log(allChecked)
+    setallChecked(!allChecked)
+  }
+  const [lists, changeLists] = useState([
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
     {
+      checked: false,
       name: "rewa",
       profit: 20,
       maskPrice: "1,50€",
     },
   ]);
+  const updateChecked = (i) => {
+    if(i)
+    {
+      let newList = lists
+      newList[i].checked = !lists[i].checked;
+      changeLists(newList)
+    }
+    else {
+      let newList = lists
+      for(let a = 0 ; a < lists.length; a++)
+      newList[a].checked = !lists[a].checked;
+      changeLists(newList)
+    }
+  }
   return (
     <div className="money-page-container">
       <div className="sales-figure">
@@ -83,9 +113,9 @@ export default function MoneyPage() {
         <p className="headings">tenant options</p>
         <div className="tenant-body">
           <div className="select-all">
-            <div class="round">
-              <input type="checkbox" id="checkbox" />
-              <label for="checkbox"></label>
+            <div className="round">
+              <input onChange={()=>checkAllCheckboxes() } type="checkbox" id="checkbox" />
+              <label htmlFor="checkbox"></label>
             </div>
             <p className="points">All</p>
           </div>
@@ -99,13 +129,11 @@ export default function MoneyPage() {
                   <p>mask price</p>
                 </div>
                 {lists?.map((item, i) => (
-                  <div className="tenant-lists">
-                    <p>
-                      <div class="round">
-                        <input type="checkbox" id={"checkbox" + i + 1} />
-                        <label for={"checkbox" + i + 1}></label>
+                  <div key={i} className="tenant-lists">
+                      <div className="round">
+                        <input onChange={()=>{updateChecked(i);}} checked={allChecked || item.checked} type="checkbox" id={"checkbox" + i + 1} />
+                        <label htmlFor={"checkbox" + i + 1}></label>
                       </div>
-                    </p>
                     <p>{item.name}</p>
                     <p>{item.profit}%</p>
                     <p>{item.maskPrice}</p>

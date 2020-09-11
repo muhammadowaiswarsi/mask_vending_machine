@@ -1,0 +1,66 @@
+
+.vending-machines .heading {
+    font-size: 2.5em;
+    text-align: left;
+    color: #383838;
+    margin-bottom: 20px;
+  }
+  
+  
+  
+  .vending-machines {
+    width: 100%;
+    border-radius: 30px;
+    padding: 0.5em 1em;
+    box-shadow: 1px 3px 8px rgb(161, 161, 161);
+    background-color: white;
+  }
+  .vending-machines table {
+    width: 90%;
+    margin: auto;
+    padding-bottom: 20px;
+  }
+  
+  .vending-table {
+    max-height: 410px;
+    overflow: auto;
+    max-width: 2920px;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .vending-table::-webkit-scrollbar {
+    width: 0.6em;
+  }
+  .vending-table::-webkit-scrollbar-thumb {
+    box-shadow: inset 10px 0 6px #c3c3c3;
+    border-radius: 26px;
+  }
+  .vending-machines th {
+    font-weight: 500;
+    padding-bottom: 15px;
+    font-size: 1.3em;
+    text-align: left;
+    color: #464646;
+  }
+  .vending-machines td {
+    font-weight: normal;
+    font-family: sans-serif;
+    text-align: left;
+    font-size: 1.3em;
+    color: #464646;
+  }
+  .vending-status-offline, .low-vending {
+      color: #f56071 !important;
+  }
+  .moderate-vending {
+      color: #f5aa60 !important;
+  }
+  .vending-footer {
+    height: 35px;
+    width: 90%;
+    top: -45px;
+    position: relative;
+    /* background-color: red; */
+    background-color: rgba(255, 255, 255, 0.541);
+    margin-bottom: 10px;
+  }

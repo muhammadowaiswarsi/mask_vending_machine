@@ -26,8 +26,16 @@
   .donutchart-text-label {
     display: inline-block;
     font-size:19px;
-    margin-top: 6px;
   }
   
-  
+@media screen and (max-width: 400px) {
+  .donutchart-text-val {
+    font-size: 24px;
+    padding-bottom: 2px;
+  }
+  .donutchart-text-label {
+    display: inline-block;
+    font-size:10px;
+  }
+}
   
