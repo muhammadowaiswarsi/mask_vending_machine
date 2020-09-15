@@ -1,3 +1,4 @@
+import { AmplifySignOut } from "@aws-amplify/ui-react";
 import React, { useState } from "react";
 import "./money.css";
 
@@ -91,6 +92,9 @@ export default function MoneyPage() {
   }
   return (
     <div className="money-page-container">
+      <div className="sign-out">
+        <AmplifySignOut />
+      </div>
       <div className="sales-figure">
         <div>
           <p className="sales-headings">sales figures</p>

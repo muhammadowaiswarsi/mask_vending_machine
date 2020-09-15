@@ -32,8 +32,7 @@ const AuthStateApp = () => {
       <div className="container">
 
       <Navbar selectNav={selectNav} />
-      {/* <div>Hello, {user?.attributes?.email}</div>
-      <AmplifySignOut /> */}
+      {/* <div>Hello, {user?.attributes?.email}</div> */}
       {navselection === "machine" ? 
       <MachinePage  />
       :
