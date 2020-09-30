@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Amplify from "aws-amplify";
 import { AmplifyAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
@@ -13,12 +13,12 @@ Amplify.configure(awsconfig);
 const AuthStateApp = () => {
   const [authState, setAuthState] = React.useState();
   const [user, setUser] = React.useState();
-  const [navselection, setnavselection] = useState("machine")
+  const [navselection, setnavselection] = useState("machine");
 
   const selectNav = (data) => {
-    setnavselection(data)
-    console.log(data)
-  }
+    setnavselection(data);
+    console.log(data);
+  };
 
   React.useEffect(() => {
     return onAuthUIStateChange((nextAuthState, authData) => {
@@ -30,14 +30,8 @@ const AuthStateApp = () => {
   return authState === AuthState.SignedIn && user ? (
     <div className="App">
       <div className="container">
-
-      <Navbar selectNav={selectNav} />
-      {/* <div>Hello, {user?.attributes?.email}</div> */}
-      {navselection === "machine" ? 
-      <MachinePage  />
-      :
-      <MoneyPage />
-      }
+        <Navbar selectNav={selectNav} />
+        {navselection === "machine" ? <MachinePage /> : <MoneyPage />}
       </div>
     </div>
   ) : (

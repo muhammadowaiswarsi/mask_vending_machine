@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DonutChart } from "../DonutChart/DonutChart";
 import { Collapse } from "react-bootstrap";
-import "./style.css"
+import "./style.css";
 
-export default function MaskInventory() {
+export default function MaskInventory({ data }) {
+  console.log(data);
   const [emptystate, setemptystate] = useState(false);
   const [warningstate, setwarningstate] = useState(false);
   const [filledstate, setfilledstate] = useState(false);
-  const [emptyData] = useState([
+  const [emptyData, useEmptyData] = useState([
     <>
       <DonutChart
         nonCompleted="#dddddd"
@@ -54,7 +55,7 @@ export default function MaskInventory() {
       <p className="chart-label">999999</p>
     </>,
   ]);
-  const [warningData] = useState([
+  const [warningData, useWarningData] = useState([
     <>
       <DonutChart
         nonCompleted="#dddddd"
@@ -102,7 +103,7 @@ export default function MaskInventory() {
     </>,
   ]);
 
-  const [filledData] = useState([
+  const [filledData, useFilledData] = useState([
     <>
       <DonutChart
         nonCompleted="#dddddd"
@@ -149,6 +150,26 @@ export default function MaskInventory() {
       <p className="chart-label">999999</p>
     </>,
   ]);
+  useEffect(() => {
+    const emptyDataTemp = data?.filter((item, index) => {
+      return item.masqomats?.items?.filter((item1) =>
+        item1.products?.items?.filter((item2) => item2.stock < 10)
+      ).stock;
+    });
+    const warningDataTemp = data?.filter((item, index) => {
+      return item.masqomats?.items?.filter((item1) =>
+        item1.products?.items?.filter((item2) => item2.stock < 100)
+      );
+    });
+    const filledDataTemp = data?.filter((item, index) => {
+      return item.masqomats?.items?.filter((item1) =>
+        item1.products?.items?.filter((item2) => item2.stock < 100)
+      );
+    });
+    setemptystate(emptyDataTemp);
+    setwarningstate(warningDataTemp);
+    setfilledstate(filledDataTemp);
+  }, [data]);
   return (
     <div className="mask-inventory">
       <p className="heading">mask inventory</p>
@@ -177,11 +198,32 @@ export default function MaskInventory() {
         </div>
         <Collapse in={emptystate}>
           <div className="empty-collapse-text">
-            {emptyData?.map((item, i) => (
-              <div key={i} className="empty-data">
-                {item}
-              </div>
-            ))}
+            {data?.map((item, index) => {
+              return item.masqomats?.items?.map((item1) =>
+                item1.products?.items?.map((item2) => {
+                  if (item2.stock < 10)
+                    return (
+                      <div key={i} className="empty-data">
+                        <>
+                          <DonutChart
+                            nonCompleted="#dddddd"
+                            txtColor="#f56071"
+                            completed="#f56071"
+                            value={52}
+                            totalValue={208}
+                            valuelabel="masks available"
+                            size={80}
+                            strokewidth={7}
+                            labelMarginTop={7}
+                            rotateAngle={-90}
+                          />
+                          <p className="chart-label">{item2.stock}</p>
+                        </>
+                      </div>
+                    );
+                })
+              );
+            })}
           </div>
         </Collapse>
         <div
