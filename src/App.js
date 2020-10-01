@@ -17,7 +17,6 @@ const AuthStateApp = () => {
 
   const selectNav = (data) => {
     setnavselection(data);
-    console.log(data);
   };
 
   React.useEffect(() => {

@@ -1,181 +1,58 @@
 import React, { useEffect, useState } from "react";
+import { API, graphqlOperation } from 'aws-amplify';
 import { DonutChart } from "../DonutChart/DonutChart";
 import { Collapse } from "react-bootstrap";
 import "./style.css";
+import { onCreateReseller } from "../../graphql/subsciption";
 
 export default function MaskInventory({ data }) {
-  console.log(data);
   const [emptystate, setemptystate] = useState(false);
   const [warningstate, setwarningstate] = useState(false);
   const [filledstate, setfilledstate] = useState(false);
-  const [emptyData, useEmptyData] = useState([
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f56071"
-        completed="#f56071"
-        value={52}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f56071"
-        completed="#f56071"
-        value={52}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f56071"
-        completed="#f56071"
-        value={52}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-  ]);
-  const [warningData, useWarningData] = useState([
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f5aa60"
-        completed="#f5aa60"
-        value={51}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f5aa60"
-        completed="#f5aa60"
-        value={51}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#f5aa60"
-        completed="#f5aa60"
-        value={51}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-  ]);
-
-  const [filledData, useFilledData] = useState([
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#85d8ab"
-        completed="#85d8ab"
-        value={156}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#85d8ab"
-        completed="#85d8ab"
-        value={156}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-    <>
-      <DonutChart
-        nonCompleted="#dddddd"
-        txtColor="#85d8ab"
-        completed="#85d8ab"
-        value={156}
-        totalValue={208}
-        valuelabel="masks available"
-        size={80}
-        strokewidth={7}
-        labelMarginTop={7}
-        rotateAngle={-90}
-      />
-      <p className="chart-label">999999</p>
-    </>,
-  ]);
+  const [emptyData, useEmptyData] = useState([]);
+  const [warningData, useWarningData] = useState([]);
+  const [filledData, useFilledData] = useState([]);
+  let onCreate;
+  const ManagingData = (data)=>{
+    const emptyDataTemp = [];
+    const warningDataTemp = [];
+    const filledDataTemp = [];
+    data?.forEach((item, index) => {
+      item.masqomats?.items?.forEach((item1) =>
+        item1.products?.items?.forEach((item2) => {
+          if (item2?.stock < 10) {
+            emptyDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
+          } else if (item2.stock < 100) {
+            warningDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
+          } else {
+            filledDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
+          }
+        })
+      );
+    });
+    useEmptyData(emptyDataTemp);
+    useWarningData(warningDataTemp);
+    useFilledData(filledDataTemp);
+  }
   useEffect(() => {
-    const emptyDataTemp = data?.filter((item, index) => {
-      return item.masqomats?.items?.filter((item1) =>
-        item1.products?.items?.filter((item2) => item2.stock < 10)
-      ).stock;
-    });
-    const warningDataTemp = data?.filter((item, index) => {
-      return item.masqomats?.items?.filter((item1) =>
-        item1.products?.items?.filter((item2) => item2.stock < 100)
-      );
-    });
-    const filledDataTemp = data?.filter((item, index) => {
-      return item.masqomats?.items?.filter((item1) =>
-        item1.products?.items?.filter((item2) => item2.stock < 100)
-      );
-    });
-    setemptystate(emptyDataTemp);
-    setwarningstate(warningDataTemp);
-    setfilledstate(filledDataTemp);
+    ManagingData(data)
   }, [data]);
+  useEffect(()=>{
+    onCreate = API.graphql(
+      graphqlOperation(onCreateReseller )
+  ).subscribe({
+      next: (createUserData) => {
+          let createduserData = createUserData?.value?.data?.onCreateUser;
+          setVendingData(previousData =>[...previousData, createduserData]);
+      }
+  });
+  },[])
   return (
     <div className="mask-inventory">
       <p className="heading">mask inventory</p>
       <div className="mask-inventory-body">
         <div className="empty-state" onClick={() => setemptystate(!emptystate)}>
-          <p>empty (1/200) </p>
+          <p>empty ({emptyData.length}/208) </p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -198,39 +75,32 @@ export default function MaskInventory({ data }) {
         </div>
         <Collapse in={emptystate}>
           <div className="empty-collapse-text">
-            {data?.map((item, index) => {
-              return item.masqomats?.items?.map((item1) =>
-                item1.products?.items?.map((item2) => {
-                  if (item2.stock < 10)
-                    return (
-                      <div key={i} className="empty-data">
-                        <>
-                          <DonutChart
-                            nonCompleted="#dddddd"
-                            txtColor="#f56071"
-                            completed="#f56071"
-                            value={52}
-                            totalValue={208}
-                            valuelabel="masks available"
-                            size={80}
-                            strokewidth={7}
-                            labelMarginTop={7}
-                            rotateAngle={-90}
-                          />
-                          <p className="chart-label">{item2.stock}</p>
-                        </>
-                      </div>
-                    );
-                })
-              );
-            })}
+            {emptyData?.map((item, index) => (
+              <div key={index} className="empty-data">
+                <>
+                  <DonutChart
+                    nonCompleted="#dddddd"
+                    txtColor="#f56071"
+                    completed="#f56071"
+                    value={item.stock}
+                    totalValue={208}
+                    valuelabel="masks available"
+                    size={80}
+                    strokewidth={7}
+                    labelMarginTop={7}
+                    rotateAngle={-90}
+                  />
+                  <p className="chart-label">{item.price}</p>
+                </>
+              </div>
+            ))}
           </div>
         </Collapse>
         <div
           className="warning-state"
           onClick={() => setwarningstate(!warningstate)}
         >
-          <p>warning (1/200) </p>
+          <p>warning ({warningData.length}/208) </p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -253,9 +123,23 @@ export default function MaskInventory({ data }) {
         </div>
         <Collapse in={warningstate}>
           <div className="warning-collapse-text">
-            {warningData?.map((item, i) => (
-              <div key={i} className="empty-data">
-                {item}
+            {warningData?.map((item, index) => (
+              <div key={index} className="empty-data">
+                <>
+                  <DonutChart
+                    nonCompleted="#dddddd"
+                    txtColor="#f5aa60"
+                    completed="#f5aa60"
+                    value={item.stock}
+                    totalValue={208}
+                    valuelabel="masks available"
+                    size={80}
+                    strokewidth={7}
+                    labelMarginTop={7}
+                    rotateAngle={-90}
+                  />
+                  <p className="chart-label">{item.price}</p>
+                </>
               </div>
             ))}
           </div>
@@ -264,7 +148,7 @@ export default function MaskInventory({ data }) {
           className="filled-state"
           onClick={() => setfilledstate(!filledstate)}
         >
-          <p>filled (1/200) </p>
+          <p>filled ({filledData.length}/208) </p>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -287,9 +171,23 @@ export default function MaskInventory({ data }) {
         </div>
         <Collapse in={filledstate}>
           <div className="filled-collapse-text">
-            {filledData?.map((item, i) => (
-              <div key={i} className="empty-data">
-                {item}
+            {filledData?.map((item, index) => (
+              <div key={index} className="empty-data">
+                <>
+                  <DonutChart
+                    nonCompleted="#dddddd"
+                    txtColor="#85d8ab"
+                    completed="#85d8ab"
+                    value={item.stock}
+                    totalValue={208}
+                    valuelabel="masks available"
+                    size={80}
+                    strokewidth={7}
+                    labelMarginTop={7}
+                    rotateAngle={-90}
+                  />
+                  <p className="chart-label">{item.price}</p>
+                </>
               </div>
             ))}
           </div>

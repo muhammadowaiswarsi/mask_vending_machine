@@ -5,7 +5,6 @@ export const DonutChart = ({size, rotateAngle, labelMarginTop, strokewidth, valu
       size = size ? size : 250;
       size = (screen.width < 400  && size > 200) ? 150 : size;
       labelMarginTop = (screen.width < 400  && labelMarginTop > 200) ? 150 : labelMarginTop;
-      console.log(labelMarginTop)
       rotateAngle = rotateAngle ? rotateAngle : 0;
       labelMarginTop = labelMarginTop ? labelMarginTop : 25
       strokewidth = strokewidth ? strokewidth : 25;

@@ -5,7 +5,6 @@ import "./money.css";
 export default function MoneyPage() {
   const [allChecked, setallChecked] = useState(false)
   const checkAllCheckboxes = () => {
-    console.log(allChecked)
     setallChecked(!allChecked)
   }
   const [lists, changeLists] = useState([
@@ -77,14 +76,14 @@ export default function MoneyPage() {
     },
   ]);
   const updateChecked = (i) => {
-    if(i)
+    if(i || i === 0)
     {
-      let newList = lists
+      let newList = [...lists]
       newList[i].checked = !lists[i].checked;
       changeLists(newList)
     }
     else {
-      let newList = lists
+      let newList = [...lists]
       for(let a = 0 ; a < lists.length; a++)
       newList[a].checked = !lists[a].checked;
       changeLists(newList)

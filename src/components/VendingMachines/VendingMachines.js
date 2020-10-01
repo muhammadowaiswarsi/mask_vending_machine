@@ -1,153 +1,39 @@
-import React, {useState} from "react";
-import "./style.css"
+import React, { useEffect, useState } from "react";
+import { API, graphqlOperation } from 'aws-amplify';
+import "./style.css";
+import { onCreateReseller } from "../../graphql/subsciption";
 
-export default function VendingMachines() {
-  const [vendingData] = useState([
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "200/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "100/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "70/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "80/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "135/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "159/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "0/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "200/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "195/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "187/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "185/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "65/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "154/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "135/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "156/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "147/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "online",
-      availableMasks: "168/208",
-      monthlySales: 353,
-    },
-    {
-      id: 999564,
-      location: "Kolki",
-      company: "Malksjss",
-      onlineStatus: "offline",
-      availableMasks: "78/208",
-      monthlySales: 353,
-    },
-  ]);
+export default function VendingMachines({ data }) {
+  const [vendingData, setVendingData] = useState([]);
+  let onCreate;
+  useEffect(() => {
+    const tempdata = [];
+    data?.forEach((item, index) => {
+      item.masqomats?.items?.forEach((item1) =>
+        item1.products?.items?.forEach((item2) => {
+          tempdata.push({
+            id: item1?.easyId,
+            location: item1?.description,
+            company: item1?.reseller?.companyName,
+            onlineStatus: "offline",
+            availableMasks: `${item2?.stock}/208`,
+            monthlySales: 353,
+          });
+        })
+      );
+    });
+    setVendingData(tempdata)
+  }, [data]);
+  useEffect(()=>{
+    onCreate = API.graphql(
+      graphqlOperation(onCreateReseller)
+  ).subscribe({
+      next: (createUserData) => {
+          let createduserData = createUserData?.value?.data?.onCreateUser;
+          setVendingData(previousData =>[...previousData, createduserData]);
+      }
+  });
+  },[])
   return (
     <div className="vending-machines">
       <p className="heading">vending machines</p>

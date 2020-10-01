@@ -1,6 +1,5 @@
 .money-page-container {
-  padding: 5em;
-  padding-top: 1em;
+  padding: 1em 5em;
   background-color: #e9e9e9e3;
   width: 100%;
   height: 100vh;
@@ -196,6 +195,7 @@
     cursor: pointer;
     outline: none;
 }
+
 @media screen and (max-width: 1300px) {
   .sales-figure {
     padding-right: 0.5em;
@@ -223,8 +223,11 @@
   .money-page-container {
     padding: 1em;
   }
-.tenant-bottom-part {
+  .tenant-bottom-part {
     display: block;
+  }
+  .tenant-changing-part {
+    padding-left: 0;
   }
   .tenant-list-body {
       width: 90%;
