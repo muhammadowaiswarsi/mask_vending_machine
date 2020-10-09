@@ -40,12 +40,13 @@ export default function MaskInventory({ data }) {
   useEffect(()=>{
     onCreate = API.graphql(
       graphqlOperation(onCreateReseller )
-  ).subscribe({
-      next: (createUserData) => {
-          let createduserData = createUserData?.value?.data?.onCreateUser;
-          setVendingData(previousData =>[...previousData, createduserData]);
-      }
-  });
+  )
+  // .subscribe({
+  //     next: (createUserData) => {
+  //         let createduserData = createUserData?.value?.data?.onCreateUser;
+  //         setVendingData(previousData =>[...previousData, createduserData]);
+  //     }
+  // });
   },[])
   return (
     <div className="mask-inventory">
