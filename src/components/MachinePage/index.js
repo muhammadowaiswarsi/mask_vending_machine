@@ -14,7 +14,7 @@ export default function MachinePage() {
         Date.now().toString() + "9e8867d1-4d91-44a4-93eb-fb900b082913";
       const result = await API.post(
         "orderlambda",
-        "https://7rbmaacwae.execute-api.eu-central-1.amazonaws.com/devenv/status",
+        "/status",
         {
           body: {
             masqomatEasyId: "999997",
