@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from "aws-amplify";
 import "./style.css";
 import { onCreateReseller } from "../../graphql/subsciption";
 
@@ -8,32 +8,34 @@ export default function VendingMachines({ data }) {
   let onCreate;
   useEffect(() => {
     const tempdata = [];
-    data?.forEach((item, index) => {
-      item.masqomats?.items?.forEach((item1) =>
-        item1.products?.items?.forEach((item2) => {
+    for (let i = 0; i < data?.length; i++) {
+      for (let j = 0; j < data[i]?.masqomats?.items.length; j++) {
+        for (
+          let k = 0;
+          k < data[i]?.masqomats?.items[j].products?.items.length;
+          k++
+        ) {
           tempdata.push({
-            id: item1?.easyId,
-            location: item1?.description,
-            company: item1?.reseller?.companyName,
+            id: data[i]?.masqomats?.items[j]?.easyId,
+            location: data[i]?.masqomats?.items[j]?.description,
+            company: data[i]?.masqomats?.items[j]?.reseller?.companyName,
             onlineStatus: "offline",
-            availableMasks: `${item2?.stock}/208`,
+            availableMasks: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.stock}/208`,
             monthlySales: 353,
           });
-        })
-      );
-    });
-    setVendingData(tempdata)
-  }, [data]);
-  useEffect(()=>{
-    onCreate = API.graphql(
-      graphqlOperation(onCreateReseller)
-  ).subscribe({
-      next: (createUserData) => {
-          let createduserData = createUserData?.value?.data?.onCreateUser;
-          setVendingData(previousData =>[...previousData, createduserData]);
+        }
       }
-  });
-  },[])
+    }
+    setVendingData(tempdata);
+  }, [data]);
+  useEffect(() => {
+    onCreate = API.graphql(graphqlOperation(onCreateReseller)).subscribe({
+      next: (createUserData) => {
+        let createduserData = createUserData?.value?.data?.onCreateUser;
+        setVendingData((previousData) => [...previousData, createduserData]);
+      },
+    });
+  }, []);
   return (
     <div className="vending-machines">
       <p className="heading">vending machines</p>

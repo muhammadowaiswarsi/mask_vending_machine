@@ -23,7 +23,7 @@ export default function MachinePage() {
         }
       );
 
-      if (result == "online") {
+      if (result?.toLowerCase() === "online") {
         console.log("online");
       } else {
         //NOT ONLINE

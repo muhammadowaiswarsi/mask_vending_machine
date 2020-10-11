@@ -3,8 +3,8 @@ import "./donut-chart.css"
 
 export const DonutChart = ({size, rotateAngle, labelMarginTop, strokewidth, value, valuelabel, totalValue, nonCompleted, completed, txtColor}) => {
       size = size ? size : 250;
-      size = (screen.width < 400  && size > 200) ? 150 : size;
-      labelMarginTop = (screen.width < 400  && labelMarginTop > 200) ? 150 : labelMarginTop;
+      size = (window.screen.width < 400  && size > 200) ? 150 : size;
+      labelMarginTop = (window.screen.width < 400  && labelMarginTop > 200) ? 150 : labelMarginTop;
       rotateAngle = rotateAngle ? rotateAngle : 0;
       labelMarginTop = labelMarginTop ? labelMarginTop : 25
       strokewidth = strokewidth ? strokewidth : 25;

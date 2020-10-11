@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from "aws-amplify";
 import { DonutChart } from "../DonutChart/DonutChart";
 import { Collapse } from "react-bootstrap";
 import "./style.css";
@@ -13,41 +13,58 @@ export default function MaskInventory({ data }) {
   const [warningData, useWarningData] = useState([]);
   const [filledData, useFilledData] = useState([]);
   let onCreate;
-  const ManagingData = (data)=>{
+  const ManagingData = (data) => {
     const emptyDataTemp = [];
     const warningDataTemp = [];
     const filledDataTemp = [];
-    data?.forEach((item, index) => {
-      item.masqomats?.items?.forEach((item1) =>
-        item1.products?.items?.forEach((item2) => {
-          if (item2?.stock < 10) {
-            emptyDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
-          } else if (item2.stock < 100) {
-            warningDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
-          } else {
-            filledDataTemp.push({ price: item1?.easyId, stock: item2?.stock });
+    for (let i = 0; i < data?.length; i++) {
+      for (let j = 0; j < data[i]?.masqomats?.items?.length; j++) {
+        for (
+          let k = 0;
+          k < data[i]?.masqomats?.items[j]?.products?.items?.length;
+          k++
+          ) {
+            if (data[i]?.masqomats?.items[j]?.products?.items?.stock < 10) {
+              emptyDataTemp.push({
+                price: data[i]?.masqomats?.items[j]?.easyId,
+                stock:
+                data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
+              });
+            } else if (
+              data[i]?.masqomats?.items[j]?.products?.items?.stock < 100
+              ) {
+                warningDataTemp.push({
+                  price: data[i]?.masqomats?.items[j]?.easyId,
+                  stock:
+                  data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
+                });
+              } else {
+                console.log("abc")
+            filledDataTemp.push({
+              price: data[i]?.masqomats?.items[j]?.easyId,
+              stock:
+                data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
+            });
           }
-        })
-      );
-    });
+        }
+      }
+    }
     useEmptyData(emptyDataTemp);
     useWarningData(warningDataTemp);
     useFilledData(filledDataTemp);
-  }
+  };
   useEffect(() => {
-    ManagingData(data)
+    ManagingData(data);
   }, [data]);
-  useEffect(()=>{
-    onCreate = API.graphql(
-      graphqlOperation(onCreateReseller )
-  )
-  // .subscribe({
-  //     next: (createUserData) => {
-  //         let createduserData = createUserData?.value?.data?.onCreateUser;
-  //         setVendingData(previousData =>[...previousData, createduserData]);
-  //     }
-  // });
-  },[])
+  useEffect(() => {
+    onCreate = API.graphql(graphqlOperation(onCreateReseller));
+    // .subscribe({
+    //     next: (createUserData) => {
+    //         let createduserData = createUserData?.value?.data?.onCreateUser;
+    //         setVendingData(previousData =>[...previousData, createduserData]);
+    //     }
+    // });
+  }, []);
   return (
     <div className="mask-inventory">
       <p className="heading">mask inventory</p>

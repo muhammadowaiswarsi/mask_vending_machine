@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
 import Amplify from "aws-amplify";
-import { AmplifyAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+import {
+  AmplifyAuthenticator,
+  AmplifySignIn,
+  AmplifyForgotPassword,
+  AmplifyConfirmSignIn,
+} from "@aws-amplify/ui-react";
 import { AuthState, onAuthUIStateChange } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
 import Navbar from "./components/Navbar/Index";
@@ -35,7 +40,9 @@ const AuthStateApp = () => {
     </div>
   ) : (
     <div className="authentication-page">
-      <AmplifyAuthenticator />
+      <AmplifyAuthenticator>
+        <AmplifySignIn slot="sign-in" hideSignUp />
+      </AmplifyAuthenticator>
     </div>
   );
 };
