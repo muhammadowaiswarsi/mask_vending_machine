@@ -39,7 +39,6 @@ export default function MaskInventory({ data }) {
                   data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
                 });
               } else {
-                console.log("abc")
             filledDataTemp.push({
               price: data[i]?.masqomats?.items[j]?.easyId,
               stock:

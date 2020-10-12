@@ -25,3 +25,18 @@ query Reseller{
       }
     }
   }`;
+export const listOrders = `
+query listorders{
+  listOrders{
+    items{
+      id
+      sumPrice
+        masqomat{
+        id
+        reseller{
+          name
+        }
+        }
+    }
+  }
+}`;

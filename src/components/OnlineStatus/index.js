@@ -1,53 +1,26 @@
 import React, { useState } from "react";
 import { DonutChart } from "../DonutChart/DonutChart";
+import ClipLoader from "react-spinners/ClipLoader";
 import "./onlinestatus.css";
 
-export default function OnlineStatus() {
+export default function OnlineStatus({ data }) {
   const [active, setactive] = useState("offline");
-  const [offlineData] = useState([
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-    { id: "999654", location: "KoLIN", company: "Mlskjsd" },
-  ]);
-  const [onlineData] = useState([
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-    { id: "999656", location: "KoLIN", company: "Mlskjhe" },
-  ]);
   return (
     <div className="status">
       <p className="heading">onlinestatus</p>
       <div className="machine-card-data">
         <DonutChart
           nonCompleted="#f56071"
-          txtColor="#85d8ab"
+          txtColor={
+            data?.filter((items) => items?.onlineStatus === "online").length
+              ? "#85d8ab"
+              : "#f56071"
+          }
           completed="#85d8ab"
-          value={150}
-          totalValue={200}
+          value={
+            data?.filter((items) => items?.onlineStatus === "online").length
+          }
+          totalValue={data?.length}
           valuelabel="machines online"
         />
         <div className="status-right-body">
@@ -77,21 +50,33 @@ export default function OnlineStatus() {
                 </tr>
               </thead>
               <tbody>
-                {active === "offline"
-                  ? offlineData.map((item, i) => (
+                {active === "offline" ? (
+                  data ? (
+                    data
+                      ?.filter((item) => item?.onlineStatus === "offline")
+                      .map((item, i) => (
+                        <tr key={i}>
+                          <td>{item.id}</td>
+                          <td>{item.location}</td>
+                          <td>{item.company}</td>
+                        </tr>
+                      ))
+                  ) : (
+                    <ClipLoader size={150} color={"#85d8ab"} />
+                  )
+                ) : data ? (
+                  data
+                    ?.filter((item) => item?.onlineStatus === "online")
+                    .map((item, i) => (
                       <tr key={i}>
                         <td>{item.id}</td>
                         <td>{item.location}</td>
                         <td>{item.company}</td>
                       </tr>
                     ))
-                  : onlineData.map((item, i) => (
-                      <tr key={i}>
-                        <td>{item.id}</td>
-                        <td>{item.location}</td>
-                        <td>{item.company}</td>
-                      </tr>
-                    ))}
+                ) : (
+                  <ClipLoader size={150} color={"#85d8ab"} />
+                )}
               </tbody>
             </table>
           </div>

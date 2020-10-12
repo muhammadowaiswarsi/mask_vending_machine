@@ -78,14 +78,14 @@
 .status-body td,
 .status-body th {
   text-align: left;
-  width: 33%;
+  padding: 0 0.5em;
 }
 .status-body th {
   font-weight: 500;
   color: black;
 }
 .status-right-body {
-  padding: 0 2em;
+  padding: 0 1em;
 }
 .status-footer {
   height: 30px;

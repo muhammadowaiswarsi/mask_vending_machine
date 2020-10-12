@@ -4,38 +4,42 @@ import "./style.css";
 import { onCreateReseller } from "../../graphql/subsciption";
 
 export default function VendingMachines({ data }) {
-  const [vendingData, setVendingData] = useState([]);
-  let onCreate;
-  useEffect(() => {
-    const tempdata = [];
-    for (let i = 0; i < data?.length; i++) {
-      for (let j = 0; j < data[i]?.masqomats?.items.length; j++) {
-        for (
-          let k = 0;
-          k < data[i]?.masqomats?.items[j].products?.items.length;
-          k++
-        ) {
-          tempdata.push({
-            id: data[i]?.masqomats?.items[j]?.easyId,
-            location: data[i]?.masqomats?.items[j]?.description,
-            company: data[i]?.masqomats?.items[j]?.reseller?.companyName,
-            onlineStatus: "offline",
-            availableMasks: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.stock}/208`,
-            monthlySales: 353,
-          });
-        }
-      }
-    }
-    setVendingData(tempdata);
-  }, [data]);
-  useEffect(() => {
-    onCreate = API.graphql(graphqlOperation(onCreateReseller)).subscribe({
-      next: (createUserData) => {
-        let createduserData = createUserData?.value?.data?.onCreateUser;
-        setVendingData((previousData) => [...previousData, createduserData]);
-      },
-    });
-  }, []);
+  console.log(data, "h");
+  // const [vendingData, setVendingData] = useState([]);
+  // let onCreate;
+  // useEffect(() => {
+  //   const tempdata = [];
+  //   for (let i = 0; i < data?.length; i++) {
+  //     for (let j = 0; j < data[i]?.masqomats?.items.length; j++) {
+  //       for (
+  //         let k = 0;
+  //         k < data[i]?.masqomats?.items[j].products?.items.length;
+  //         k++
+  //       ) {
+  //         tempdata.push({
+  //           id: data[i]?.masqomats?.items[j]?.easyId,
+  //           location: data[i]?.masqomats?.items[j]?.description,
+  //           company: data[i]?.masqomats?.items[j]?.reseller?.companyName,
+  //           onlineStatus: data[i]?.masqomats?.items[j]?.online
+  //             ? "online"
+  //             : "offline",
+  //           availableMasks: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.stock}/208`,
+  //           monthlySales: 353,
+  //         });
+  //       }
+  //     }
+  //   }
+  //   setVendingData([...tempdata]);
+  // }, [data]);
+  // useEffect(() => {
+  //   onCreate = API.graphql(graphqlOperation(onCreateReseller)).subscribe({
+  //     next: (createUserData) => {
+  //       let createduserData = createUserData?.value?.data?.onCreateUser;
+  //       setVendingData((previousData) => [...previousData, createduserData]);
+  //     },
+  //   });
+  // }, []);
+
   return (
     <div className="vending-machines">
       <p className="heading">vending machines</p>
@@ -52,14 +56,14 @@ export default function VendingMachines({ data }) {
             </tr>
           </thead>
           <tbody>
-            {vendingData?.map((item, i) => (
+            {data?.map((item, i) => (
               <tr key={i}>
                 <td>{item.id}</td>
                 <td>{item.location}</td>
                 <td>{item.company}</td>
                 <td
                   className={
-                    item.onlineStatus === "offline"
+                    item?.onlineStatus === "offline"
                       ? "vending-status-offline"
                       : ""
                   }
