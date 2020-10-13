@@ -12,8 +12,9 @@ import awsconfig from "./aws-exports";
 import Navbar from "./components/Navbar/Index";
 import MachinePage from "./components/MachinePage/index.js";
 import MoneyPage from "./components/MoneyPage";
-
 import { getResellers, listOrders } from "./graphql/queries";
+import { UpdateOrders } from "./graphql/mutation";
+import { onUpdateProduct } from "./graphql/subsciption";
 
 Amplify.configure(awsconfig);
 
@@ -21,8 +22,8 @@ const AuthStateApp = () => {
   const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
   const [navselection, setnavselection] = useState("machine");
-  const [data, setData] = useState(null);
-  const [vending, setVending] = useState();
+  const [data, setData] = useState(false);
+  const [vending, setVending] = useState(false);
   const [onlineList, setOnlineList] = useState(false);
   const [offlineList, setOfflineList] = useState(false);
   const [new1, setnew] = useState(false);
@@ -89,7 +90,6 @@ const AuthStateApp = () => {
   };
 
   useEffect(() => {
-    console.log("hello world new world");
     const tempdata = [];
     for (let i = 0; i < data?.length; i++) {
       for (let j = 0; j < data[i]?.masqomats?.items.length; j++) {
@@ -100,18 +100,22 @@ const AuthStateApp = () => {
         ) {
           tempdata.push({
             id: data[i]?.masqomats?.items[j]?.easyId,
+            masqomatId: data[i]?.masqomats?.items[j]?.id,
             location: data[i]?.masqomats?.items[j]?.description,
             company: data[i]?.masqomats?.items[j]?.reseller?.companyName,
             onlineStatus: data[i]?.masqomats?.items[j]?.online
               ? "online"
               : "offline",
             availableMasks: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.stock}/208`,
+            priceNetto: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.priceNetto}`,
+            profitShare: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.profitShare}`,
+            productId: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.id}`,
+            name: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.name}`,
             monthlySales: 353,
           });
         }
       }
     }
-    console.log(tempdata, "tempdata");
     setVending(tempdata);
   }, [data, new1]);
 
@@ -129,6 +133,36 @@ const AuthStateApp = () => {
       });
   }, []);
 
+  const changeMoney = (id, priceNetto, profitShare) => {
+    API.graphql(
+      graphqlOperation(UpdateOrders, { input: { id, priceNetto, profitShare } })
+    )
+  };
+
+  useEffect(() => {
+    let onUpdate = API.graphql(graphqlOperation(onUpdateProduct)).subscribe({
+      next: (createUserData) => {
+        setVending(prevState => {
+          let temp = [...prevState];
+          for (let i = 0; i < prevState.length; i++) {
+            console.log(temp[i]?.masqomatId,createUserData?.value?.data?.onUpdateProduct?.masqomat?.id )
+            if (
+              temp[i]?.masqomatId ===
+              createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
+              ) {
+                temp[i].priceNetto =
+                createUserData?.value?.data?.onUpdateProduct?.priceNetto;
+                temp[i].profitShare =
+                createUserData?.value?.data?.onUpdateProduct?.profitShare;
+                return temp;
+              }
+            }
+          })
+        console.log(createUserData?.value?.data?.onUpdateProduct);
+      },
+    });
+  }, []);
+
   if (user?.sub)
     return (
       <div className="App">
@@ -142,7 +176,7 @@ const AuthStateApp = () => {
               data={data}
             />
           ) : (
-            <MoneyPage />
+            <MoneyPage changeMoney={changeMoney} data={vending} />
           )}
         </div>
       </div>

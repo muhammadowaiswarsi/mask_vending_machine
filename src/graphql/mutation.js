@@ -1,14 +1,14 @@
-export const onUpdateProduct = `
-subscription Product{
-  onUpdateProduct{
+export const UpdateOrders = `
+  mutation updateProduct(
+      $input: UpdateProductInput!
+  ) {
+    updateProduct(input: $input) {
         id
         priceNetto
-        description
         name
         taxes
         profitShare
-        stock
-        masqomat{
+        masqomat {
           id
           easyId
           description
@@ -19,11 +19,16 @@ subscription Product{
             products{
             items{
               stock
+              profitShare
+              priceNetto
+              name
             }
           }
           reseller{
             companyName
           }
         }
+
     }
-  }`;
+  }
+`;

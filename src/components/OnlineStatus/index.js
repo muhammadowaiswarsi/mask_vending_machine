@@ -62,7 +62,15 @@ export default function OnlineStatus({ data }) {
                         </tr>
                       ))
                   ) : (
-                    <ClipLoader size={150} color={"#85d8ab"} />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "3em",
+                      }}
+                    >
+                      <ClipLoader size={60} color={"#f56071"} />
+                    </div>
                   )
                 ) : data ? (
                   data
@@ -75,7 +83,15 @@ export default function OnlineStatus({ data }) {
                       </tr>
                     ))
                 ) : (
-                  <ClipLoader size={150} color={"#85d8ab"} />
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "3em",
+                    }}
+                  >
+                    <ClipLoader size={60} color={"#85d8ab"} />
+                  </div>
                 )}
               </tbody>
             </table>

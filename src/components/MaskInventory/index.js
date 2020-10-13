@@ -3,7 +3,6 @@ import { API, graphqlOperation } from "aws-amplify";
 import { DonutChart } from "../DonutChart/DonutChart";
 import { Collapse } from "react-bootstrap";
 import "./style.css";
-import { onCreateReseller } from "../../graphql/subsciption";
 
 export default function MaskInventory({ data }) {
   const [emptystate, setemptystate] = useState(false);
@@ -55,15 +54,7 @@ export default function MaskInventory({ data }) {
   useEffect(() => {
     ManagingData(data);
   }, [data]);
-  useEffect(() => {
-    onCreate = API.graphql(graphqlOperation(onCreateReseller));
-    // .subscribe({
-    //     next: (createUserData) => {
-    //         let createduserData = createUserData?.value?.data?.onCreateUser;
-    //         setVendingData(previousData =>[...previousData, createduserData]);
-    //     }
-    // });
-  }, []);
+  
   return (
     <div className="mask-inventory">
       <p className="heading">mask inventory</p>

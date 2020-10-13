@@ -4,99 +4,67 @@ import React, { useEffect, useState } from "react";
 import { listOrders } from "../../graphql/queries";
 import "./money.css";
 
-export default function MoneyPage() {
+export default function MoneyPage({ changeMoney, data }) {
   const [allChecked, setallChecked] = useState(false);
+  const [listOrder, setListOrder] = useState(false);
+  const [lists, changeLists] = useState([]);
+  const [templists, changeTempLists] = useState([]);
+  const [maskPrice, setMaskPrice] = useState("");
+  const [profitShare, setProfitShare] = useState("");
+  const [id, setId] = useState("");
   const checkAllCheckboxes = () => {
+    if (!allChecked) changeTempLists(lists);
+    else changeTempLists([]);
     setallChecked(!allChecked);
   };
   const GettingApi = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
-      console.log(res?.data?.listOrders?.items);
+      console.log(res);
+      let temp = { profit: 0, price: 0 };
+      let temp1 = 0;
+      for (let i = 0; i < templists?.length; i++) {
+        for (let j = 0; j < templists?.length; j++) {
+          for (let k = 0; k < res?.data?.listOrders?.items?.length; k++) {
+            console.log(temp);
+            if (
+              templists[i].masqomatId ===
+              res?.data?.listOrders?.items[k]?.masqomat?.id
+            ) {
+              temp.profit += templists[i]?.profitShare * 100;
+              temp.price += templists[i]?.priceNetto;
+              ++temp1;
+            }
+          }
+        }
+      }
+      temp.total = temp1;
+      setListOrder(temp);
     });
   };
-
   useEffect(() => {
     GettingApi();
-  }, []);
-
-  const [lists, changeLists] = useState([
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-    {
-      checked: false,
-      name: "rewa",
-      profit: 20,
-      maskPrice: "1,50€",
-    },
-  ]);
+  }, [templists]);
+  useEffect(() => {
+    changeLists(data);
+  }, [data]);
   const updateChecked = (i) => {
     if (i || i === 0) {
-      let newList = [...lists];
-      newList[i].checked = !lists[i].checked;
-      changeLists(newList);
-    } else {
-      let newList = [...lists];
-      for (let a = 0; a < lists.length; a++)
-        newList[a].checked = !lists[a].checked;
-      changeLists(newList);
+      if (lists[i].checked) {
+        setMaskPrice("");
+        setProfitShare("");
+        setId("");
+        changeTempLists([]);
+      } else {
+        setMaskPrice(lists[i].priceNetto);
+        setProfitShare(lists[i]?.profitShare);
+        setId(lists[i]?.productId);
+        const temp = [...templists];
+        temp.push(lists[i]);
+        changeTempLists(temp);
+      }
+      const temp = [...lists];
+      temp[i].checked = !temp[i].checked;
+      changeLists(temp);
     }
   };
   return (
@@ -107,19 +75,24 @@ export default function MoneyPage() {
       <div className="sales-figure">
         <div>
           <p className="sales-headings">sales figures</p>
-          <p className="sales-values">Aug.20</p>
+          <p className="sales-values">
+            {new Date().toDateString().split(" ")[1]}.
+            {new Date().toDateString().split(" ")[2]}
+          </p>
         </div>
         <div>
           <p className="sales-headings">total mask sold</p>
-          <p className="sales-values sales-num-values">9441</p>
+          <p className="sales-values sales-num-values">
+            {listOrder?.total}
+          </p>
         </div>
         <div>
           <p className="sales-headings">total sales</p>
-          <p className="sales-values sales-num-values">11895€</p>
+          <p className="sales-values sales-num-values">{listOrder?.price}€</p>
         </div>
         <div>
           <p className="sales-headings">total profit</p>
-          <p className="sales-values sales-num-values">2735€</p>
+          <p className="sales-values sales-num-values">{listOrder?.profit}%</p>
         </div>
       </div>
       <div className="tenant-option">
@@ -152,15 +125,16 @@ export default function MoneyPage() {
                         onChange={() => {
                           updateChecked(i);
                         }}
-                        checked={allChecked || item.checked}
+                        checked={allChecked || item?.checked}
+                        value={allChecked || item?.checked}
                         type="checkbox"
                         id={"checkbox" + i + 1}
                       />
                       <label htmlFor={"checkbox" + i + 1}></label>
                     </div>
-                    <p>{item.name}</p>
-                    <p>{item.profit}%</p>
-                    <p>{item.maskPrice}</p>
+                    <p>{item?.name}</p>
+                    <p>{item?.profitShare}%</p>
+                    <p>{item?.priceNetto}€</p>
                   </div>
                 ))}
               </div>
@@ -169,16 +143,37 @@ export default function MoneyPage() {
             <div className="tenant-changing-part">
               <div>
                 <p>mask price:</p>
-                <input type="text" />
+                <input
+                  className="inputs"
+                  value={maskPrice}
+                  onChange={(e) => setMaskPrice(e.target.value)}
+                  type="text"
+                />
                 <span>€</span>
               </div>
               <div>
                 <p>profit share:</p>
-                <input type="text" />
+                <input
+                  className="inputs"
+                  value={profitShare}
+                  onChange={(e) => setProfitShare(e.target.value)}
+                  type="text"
+                />
                 <span>€</span>
               </div>
               <div className="set-changes">
-                <button>setchanges</button>
+                <button
+                  onClick={() => {
+                    if (id) {
+                      changeMoney(id, maskPrice, profitShare);
+                      setId("");
+                      setMaskPrice("");
+                      setProfitShare("");
+                    }
+                  }}
+                >
+                  setchanges
+                </button>
               </div>
             </div>
           </div>

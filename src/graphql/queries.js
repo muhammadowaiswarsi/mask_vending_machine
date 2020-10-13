@@ -14,7 +14,11 @@ query Reseller{
             }
               products{
               items{
+                id
                 stock
+                profitShare
+                priceNetto
+                name
               }
             }
             reseller{
@@ -33,6 +37,12 @@ query listorders{
       sumPrice
         masqomat{
         id
+        products{
+          items{
+            priceNetto
+            profitShare
+          }
+        }
         reseller{
           name
         }
