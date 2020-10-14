@@ -117,8 +117,8 @@
   justify-content: space-between;
 }
 .tenant-list-body {
-    width: 45%;
-    overflow: auto;
+  width: 45%;
+  overflow: auto;
 }
 .tenant-list-part {
   max-height: 400px;
@@ -137,63 +137,62 @@
   display: flex;
   margin-bottom: 15px;
 }
-.tenant-list-headings p:first-child,
-.tenant-lists p:first-child {
-  width: 4%;
+.tenant-list-part td,
+.tenant-list-part th {
+  width: 33%;
 }
-.tenant-list-headings p,
-.tenant-lists p {
-  width: 32%;
+.roundPart {
+  width: 60px !important
 }
 .tenant-lists {
   display: flex;
   padding: 0.3em 0;
 }
 .tenant-list-footer {
-    height: 80px;
-    width: 90%;
-    top: -40px;
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.541);
-    margin-bottom: 10px;
+  height: 80px;
+  width: 90%;
+  top: -40px;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.541);
+  margin-bottom: 10px;
 }
 .tenant-changing-part {
-    padding-left: 3em;
-    width: 45%;
-    margin: 0 auto;
+  padding-left: 3em;
+  width: 45%;
+  margin: 0 auto;
 }
 .tenant-changing-part p {
-    font-size: 1.5em;
-    font-weight: 500;
+  font-size: 1.5em;
+  font-weight: 500;
 }
-.tenant-changing-part>div {
-    display: flex;
-    justify-content: space-around;
-    padding: 1em 0;
+.tenant-changing-part > div {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em 0;
 }
-.tenant-changing-part>div span {
-    position: relative;
-    left: -110px;
-    font-size: 1.5em;
-    font-weight: 600;
+.tenant-changing-part > div span {
+  position: relative;
+  left: -110px;
+  font-size: 1.5em;
+  font-weight: 600;
 }
 .tenant-changing-part input {
-    border: 0;
-    outline: none;
-    padding: 0.5em;
-    border-bottom: 3px solid black;
+  border: 0;
+  outline: none;
+  padding: 0.5em;
+  border-bottom: 3px solid black;
 }
 .tenant-changing-part .set-changes button {
-    border-radius: 30px;
-    padding: 0.4em;
-    background-color: black;
-    color: white;
-    border: none;
-    width: 50%;
-    min-width: 250px;
-    font-size: 1.7em;
-    cursor: pointer;
-    outline: none;
+  border-radius: 30px;
+  padding: 0.4em;
+  background-color: black;
+  color: white;
+  border: none;
+  width: 50%;
+  min-width: 250px;
+  font-size: 1.7em;
+  cursor: pointer;
+  outline: none;
 }
 .tenant-changing-part .inputs {
   font-size: 1.5em;
@@ -233,10 +232,10 @@
     padding-left: 0;
   }
   .tenant-list-body {
-      width: 90%;
-      margin: auto;
+    width: 90%;
+    margin: auto;
   }
   .tenant-option {
-      padding-right: 1.5em;
+    padding-right: 1.5em;
   }
 }

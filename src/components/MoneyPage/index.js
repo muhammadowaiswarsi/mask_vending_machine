@@ -120,31 +120,51 @@ export default function MoneyPage({ changeMoney, data }) {
           <div className="tenant-bottom-part">
             <div className="tenant-list-body">
               <div className="tenant-list-part">
-                <div className="tenant-list-headings">
-                  <p></p>
-                  <p>name</p>
-                  <p>profit share</p>
-                  <p>mask price</p>
-                </div>
-                {lists?.map((item, i) => (
-                  <div key={i} className="tenant-lists">
-                    <div className="round">
-                      <input
-                        onChange={() => {
-                          updateChecked(i);
-                        }}
-                        checked={allChecked || item?.checked}
-                        value={allChecked || item?.checked}
-                        type="checkbox"
-                        id={"checkbox" + i + 1}
-                      />
-                      <label htmlFor={"checkbox" + i + 1}></label>
+                <table width="100%">
+                  <thead>
+                    <div className="tenant-list-headings">
+                      <td className="roundPart">
+                        <p></p>
+                      </td>
+                      <td>
+                        <p>name</p>
+                      </td>
+                      <td>
+                        <p>profit share</p>
+                      </td>
+                      <td>
+                        <p>mask price</p>
+                      </td>
                     </div>
-                    <p>{item?.name}</p>
-                    <p>{item?.profitShare}%</p>
-                    <p>{item?.priceNetto}€</p>
-                  </div>
-                ))}
+                  </thead>
+                  {lists?.map((item, i) => (
+                    <tr key={i} className="tenant-lists">
+                      <td className="roundPart">
+                        <div className="round">
+                          <input
+                            onChange={() => {
+                              updateChecked(i);
+                            }}
+                            checked={allChecked || item?.checked}
+                            value={allChecked || item?.checked}
+                            type="checkbox"
+                            id={"checkbox" + i + 1}
+                          />
+                          <label htmlFor={"checkbox" + i + 1}></label>
+                        </div>
+                      </td>
+                      <td>
+                        <p>{item?.name}</p>
+                      </td>
+                      <td>
+                        <p>{item?.profitShare}%</p>
+                      </td>
+                      <td>
+                        <p>{item?.priceNetto}€</p>
+                      </td>
+                    </tr>
+                  ))}
+                </table>
               </div>
               <div className="tenant-list-footer"></div>
             </div>
@@ -174,9 +194,6 @@ export default function MoneyPage({ changeMoney, data }) {
                   onClick={() => {
                     if (id) {
                       changeMoney(id, maskPrice, profitShare);
-                      setId("");
-                      setMaskPrice("");
-                      setProfitShare("");
                     }
                   }}
                 >

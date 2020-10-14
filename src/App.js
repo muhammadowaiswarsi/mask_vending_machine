@@ -6,6 +6,7 @@ import {
   AmplifySignIn,
   AmplifyForgotPassword,
   AmplifyConfirmSignIn,
+  withAuthenticator
 } from "@aws-amplify/ui-react";
 import { AuthState } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
@@ -126,12 +127,12 @@ const AuthStateApp = () => {
   useEffect(() => {
     Auth.currentAuthenticatedUser()
       .then((res) => {
-        setUser(res.attributes);
+        setUser(res?.attributes);
       })
       .catch((err) => {
         setUser(false);
       });
-  }, []);
+  }, [AuthState]);
 
   const changeMoney = (id, priceNetto, profitShare) => {
     API.graphql(
@@ -190,4 +191,4 @@ const AuthStateApp = () => {
   );
 };
 
-export default AuthStateApp;
+export default withAuthenticator(AuthStateApp);
