@@ -14,8 +14,18 @@ export default function MoneyPage({ changeMoney, data }) {
   const [id, setId] = useState("");
   const checkAllCheckboxes = () => {
     if (!allChecked) changeTempLists(lists);
-    else changeTempLists([]);
+    else {
+      const temp = [...lists];
+      temp.forEach((item) => {
+        item.checked = false;
+      });
+      changeLists(temp);
+      changeTempLists([]);
+    }
     setallChecked(!allChecked);
+    setMaskPrice("");
+    setProfitShare("");
+    setId("");
   };
   const GettingApi = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
@@ -82,9 +92,7 @@ export default function MoneyPage({ changeMoney, data }) {
         </div>
         <div>
           <p className="sales-headings">total mask sold</p>
-          <p className="sales-values sales-num-values">
-            {listOrder?.total}
-          </p>
+          <p className="sales-values sales-num-values">{listOrder?.total}</p>
         </div>
         <div>
           <p className="sales-headings">total sales</p>
