@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { API, graphqlOperation } from "aws-amplify";
 import "./style.css";
-import { onCreateReseller } from "../../graphql/subsciption";
 import { ClipLoader } from "react-spinners";
 
-export default function VendingMachines({ data }) {
-  console.log(data, "h");
+export default function VendingMachines({ ListOrder, data }) {
 
   return (
     <div className="vending-machines">
@@ -50,7 +48,7 @@ export default function VendingMachines({ data }) {
                     >
                       {item.availableMasks}
                     </td>
-                    <td>{item.monthlySales}€</td>
+                    <td>{item?.monthlySales}€</td>
                   </tr>
                 ))}
               </tbody>

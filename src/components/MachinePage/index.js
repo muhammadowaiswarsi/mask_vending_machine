@@ -5,7 +5,7 @@ import OnlineStatus from "../OnlineStatus";
 import MaskInventory from "../MaskInventory";
 import VendingMachines from "../VendingMachines/VendingMachines";
 
-const MachinePage = ({ data, vending, onlineList, oflineList }) => {
+const MachinePage = ({ ListOrder,data, vending, onlineList, oflineList }) => {
   return (
     <div className="machine-page-container">
       <div className="sign-out">
@@ -16,7 +16,7 @@ const MachinePage = ({ data, vending, onlineList, oflineList }) => {
         <MaskInventory data={data} />
       </div>
       <div className="second-row">
-        <VendingMachines data={vending} />
+        <VendingMachines ListOrder={ListOrder} data={vending} />
       </div>
     </div>
   );

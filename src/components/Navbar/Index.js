@@ -31,12 +31,6 @@ export default function Navbar({ selectNav }) {
           <p>money</p>
         </div>
       </div>
-      <div onClick={() => setactive("settings")} className="settings">
-        <div className={active === "settings" ? "active" : ""}>
-          <p className="settings-symbol">S</p>
-        </div>
-        <p>Settings</p>
-      </div>
     </div>
   );
 }

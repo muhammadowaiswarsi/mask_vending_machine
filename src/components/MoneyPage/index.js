@@ -122,7 +122,7 @@ export default function MoneyPage({ changeMoney, data }) {
               <div className="tenant-list-part">
                 <table width="100%">
                   <thead>
-                    <div className="tenant-list-headings">
+                    <tr className="tenant-list-headings">
                       <td className="roundPart">
                         <p></p>
                       </td>
@@ -135,7 +135,7 @@ export default function MoneyPage({ changeMoney, data }) {
                       <td>
                         <p>mask price</p>
                       </td>
-                    </div>
+                    </tr>
                   </thead>
                   {lists?.map((item, i) => (
                     <tr key={i} className="tenant-lists">

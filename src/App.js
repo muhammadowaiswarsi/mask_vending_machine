@@ -6,7 +6,7 @@ import {
   AmplifySignIn,
   AmplifyForgotPassword,
   AmplifyConfirmSignIn,
-  withAuthenticator
+  withAuthenticator,
 } from "@aws-amplify/ui-react";
 import { AuthState } from "@aws-amplify/ui-components";
 import awsconfig from "./aws-exports";
@@ -20,11 +20,11 @@ import { onUpdateProduct } from "./graphql/subsciption";
 Amplify.configure(awsconfig);
 
 const AuthStateApp = () => {
-  const [authState, setAuthState] = useState();
   const [user, setUser] = useState();
   const [navselection, setnavselection] = useState("machine");
   const [data, setData] = useState(false);
   const [vending, setVending] = useState(false);
+  const [ListOrder, setListOrder] = useState(false);
   const [onlineList, setOnlineList] = useState(false);
   const [offlineList, setOfflineList] = useState(false);
   const [new1, setnew] = useState(false);
@@ -112,7 +112,6 @@ const AuthStateApp = () => {
             profitShare: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.profitShare}`,
             productId: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.id}`,
             name: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.name}`,
-            monthlySales: 353,
           });
         }
       }
@@ -120,9 +119,24 @@ const AuthStateApp = () => {
     setVending(tempdata);
   }, [data, new1]);
 
+  const getListOrder = () => {
+    API.graphql(graphqlOperation(listOrders)).then((res) => {
+      console.log("abc")
+      setVending(prev=>{
+        let temp = [...prev]
+        for (let i = 0; i < temp?.length; i++) {
+          temp[i].monthlySales = res?.data?.listOrders?.items.filter(
+            (item) => temp[i]?.masqomatId === item?.masqomat?.id
+            ).length;
+          }
+          return temp;
+        })
+    });
+  };
   useEffect(() => {
     getData();
-  }, []);
+    getListOrder();
+  }, [new1]);
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
@@ -137,28 +151,31 @@ const AuthStateApp = () => {
   const changeMoney = (id, priceNetto, profitShare) => {
     API.graphql(
       graphqlOperation(UpdateOrders, { input: { id, priceNetto, profitShare } })
-    )
+    );
   };
 
   useEffect(() => {
     let onUpdate = API.graphql(graphqlOperation(onUpdateProduct)).subscribe({
       next: (createUserData) => {
-        setVending(prevState => {
+        setVending((prevState) => {
           let temp = [...prevState];
           for (let i = 0; i < prevState.length; i++) {
-            console.log(temp[i]?.masqomatId,createUserData?.value?.data?.onUpdateProduct?.masqomat?.id )
+            console.log(
+              temp[i]?.masqomatId,
+              createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
+            );
             if (
               temp[i]?.masqomatId ===
               createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
-              ) {
-                temp[i].priceNetto =
+            ) {
+              temp[i].priceNetto =
                 createUserData?.value?.data?.onUpdateProduct?.priceNetto;
-                temp[i].profitShare =
+              temp[i].profitShare =
                 createUserData?.value?.data?.onUpdateProduct?.profitShare;
-                return temp;
-              }
+              return temp;
             }
-          })
+          }
+        });
         console.log(createUserData?.value?.data?.onUpdateProduct);
       },
     });
@@ -175,6 +192,7 @@ const AuthStateApp = () => {
               onlineList={onlineList}
               oflineList={offlineList}
               data={data}
+              ListOrder={ListOrder}
             />
           ) : (
             <MoneyPage changeMoney={changeMoney} data={vending} />
