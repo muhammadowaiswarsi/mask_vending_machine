@@ -135,8 +135,11 @@ const AuthStateApp = () => {
   };
   useEffect(() => {
     getData();
+  }, []);
+  
+  useEffect(()=>{
     getListOrder();
-  }, [new1]);
+  }, [new1])
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
