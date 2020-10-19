@@ -44,7 +44,7 @@
   width: 100%;
   border-radius: 30px;
   padding: 0.5em 1.5em;
-  padding-right: 8em;
+  padding-right: 1em;
   padding-bottom: 1.7em;
   box-shadow: 1px 3px 8px rgb(161, 161, 161);
   margin: 1.5em 0;
@@ -115,6 +115,7 @@
 .tenant-bottom-part {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 .tenant-list-body {
   width: 45%;
@@ -125,6 +126,9 @@
   overflow: auto;
   min-width: 360px;
   padding-bottom: 3em;
+}
+.tenant-list-part table {
+  min-width: 410px;
 }
 .tenant-list-part::-webkit-scrollbar {
   width: 0.6em;
@@ -137,12 +141,20 @@
   display: flex;
   margin-bottom: 15px;
 }
-.tenant-list-part td,
+/* .tenant-list-part td,
 .tenant-list-part th {
   width: 33%;
+} */
+.tenant-list-part td:nth-child(2), .tenant-list-part th:nth-child(2) {
+  width: 40%;
+  padding: 0 0.5em;
+}
+.tenant-list-part td:nth-child(3), .tenant-list-part th:nth-child(3) {
+  width: 30%;
+  padding: 0 0.5em;
 }
 .roundPart {
-  width: 60px !important
+  width: 30px !important
 }
 .tenant-lists {
   display: flex;
@@ -160,6 +172,7 @@
   padding-left: 3em;
   width: 45%;
   margin: 0 auto;
+  min-width: 450px;
 }
 .tenant-changing-part p {
   font-size: 1.5em;
@@ -172,11 +185,13 @@
 }
 .tenant-changing-part > div span {
   position: relative;
-  left: -110px;
+  left: -50px;
+  top: 25px;
   font-size: 1.5em;
   font-weight: 600;
 }
 .tenant-changing-part input {
+  width: 100%;
   border: 0;
   outline: none;
   padding: 0.5em;
@@ -206,7 +221,7 @@
     width: 50%;
   }
 }
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 1120px) {
   .sales-figure {
     padding-right: 0.5em;
   }
@@ -234,6 +249,7 @@
   .tenant-list-body {
     width: 90%;
     margin: auto;
+    min-width: 500px;
   }
   .tenant-option {
     padding-right: 1.5em;

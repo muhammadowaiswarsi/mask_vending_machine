@@ -32,3 +32,14 @@ export const UpdateOrders = `
     }
   }
 `;
+
+export const CreateMaskUser = `
+  mutation CreateMaskUser(
+      $input: CreateMaskUser!
+  ){
+    createMaskUser(input: $input){
+      user_id
+      email
+      userName
+    }
+  }`;

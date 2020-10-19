@@ -23,3 +23,9 @@ p {
 .authentication-page .hydrated {
   margin: auto;
 }
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}

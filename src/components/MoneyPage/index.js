@@ -40,14 +40,15 @@ export default function MoneyPage({ changeMoney, data }) {
               templists[i].masqomatId ===
               res?.data?.listOrders?.items[k]?.masqomat?.id
             ) {
-              temp.profit += templists[i]?.profitShare * 100;
-              temp.price += templists[i]?.priceNetto;
+              temp.profit += Number(templists[i]?.profitShare);
+              temp.price += Number(templists[i]?.priceNetto);
               ++temp1;
             }
           }
         }
       }
       temp.total = temp1;
+      temp.profit = Number(temp.profit) / temp1;
       setListOrder(temp);
     });
   };
@@ -65,9 +66,15 @@ export default function MoneyPage({ changeMoney, data }) {
         setId("");
         changeTempLists([]);
       } else {
-        setMaskPrice(lists[i].priceNetto);
-        setProfitShare(lists[i]?.profitShare);
-        setId(lists[i]?.productId);
+        if (templists.length === 0) {
+          setMaskPrice(lists[i].priceNetto);
+          setProfitShare(lists[i]?.profitShare);
+          setId(lists[i]?.productId);
+        } else {
+          setProfitShare("");
+          setId("");
+          setMaskPrice("");
+        }
         const temp = [...templists];
         temp.push(lists[i]);
         changeTempLists(temp);
@@ -96,11 +103,15 @@ export default function MoneyPage({ changeMoney, data }) {
         </div>
         <div>
           <p className="sales-headings">total sales</p>
-          <p className="sales-values sales-num-values">{listOrder?.price}€</p>
+          <p className="sales-values sales-num-values">
+            {Number(listOrder?.price)?.toFixed(2)}€
+          </p>
         </div>
         <div>
           <p className="sales-headings">total profit</p>
-          <p className="sales-values sales-num-values">{listOrder?.profit}%</p>
+          <p className="sales-values sales-num-values">
+            {listOrder?.profit ? listOrder?.profit?.toFixed(2) : 0}%
+          </p>
         </div>
       </div>
       <div className="tenant-option">
@@ -153,15 +164,9 @@ export default function MoneyPage({ changeMoney, data }) {
                           <label htmlFor={"checkbox" + i + 1}></label>
                         </div>
                       </td>
-                      <td>
-                        <p>{item?.name}</p>
-                      </td>
-                      <td>
-                        <p>{item?.profitShare}%</p>
-                      </td>
-                      <td>
-                        <p>{item?.priceNetto}€</p>
-                      </td>
+                      <td>{item?.name}</td>
+                      <td>{item?.profitShare}%</td>
+                      <td>{item?.priceNetto}€</td>
                     </tr>
                   ))}
                 </table>

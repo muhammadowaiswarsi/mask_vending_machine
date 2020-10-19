@@ -5,7 +5,7 @@ import OnlineStatus from "../OnlineStatus";
 import MaskInventory from "../MaskInventory";
 import VendingMachines from "../VendingMachines/VendingMachines";
 
-const MachinePage = ({ ListOrder,data, vending, onlineList, oflineList }) => {
+const MachinePage = ({ ListOrder,data, vending, onlineList, oflineList, temp }) => {
   return (
     <div className="machine-page-container">
       <div className="sign-out">

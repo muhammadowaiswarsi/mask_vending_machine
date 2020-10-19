@@ -75,17 +75,29 @@
   display: flex;
   justify-content: space-between;
 }
+.status-body td:first-child, .status-body th:first-child {
+  width: 27%;
+  min-width: 66px;
+}
+.status-body td:nth-child(2), .status-body th:nth-child(2) {
+  width: 50%;
+  min-width: 110px;
+}
+.status-body td:nth-child(3), .status-body th:nth-child(3) {
+  width: 50%;
+  min-width: 80px;
+}
 .status-body td,
 .status-body th {
-  text-align: center;
-  padding: 0 0.5em;
+  text-align: left;
+  padding: 0 0.2em;
 }
 .status-body th {
   font-weight: 500;
   color: black;
 }
 .status-right-body {
-  padding: 0 1em;
+  padding: 0 0em;
 }
 .status-footer {
   height: 30px;

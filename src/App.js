@@ -13,9 +13,11 @@ import awsconfig from "./aws-exports";
 import Navbar from "./components/Navbar/Index";
 import MachinePage from "./components/MachinePage/index.js";
 import MoneyPage from "./components/MoneyPage";
-import { getResellers, listOrders } from "./graphql/queries";
+import { getMaskUser, getResellers, listOrders } from "./graphql/queries";
 import { UpdateOrders } from "./graphql/mutation";
 import { onUpdateProduct } from "./graphql/subsciption";
+import Form from "./components/Form/form";
+import Loader from "react-spinners/ClipLoader";
 
 Amplify.configure(awsconfig);
 
@@ -28,6 +30,8 @@ const AuthStateApp = () => {
   const [onlineList, setOnlineList] = useState(false);
   const [offlineList, setOfflineList] = useState(false);
   const [new1, setnew] = useState(false);
+  const [verified, setverified] = useState(false);
+  const [loader, setloader] = useState(false);
 
   const selectNav = (data) => {
     setnavselection(data);
@@ -58,31 +62,31 @@ const AuthStateApp = () => {
     APICalling();
   }, [user]);
 
-  const getData = async () => {
-    API.graphql(graphqlOperation(getResellers))
+  const getData = async (id) => {
+    API.graphql(graphqlOperation(getResellers, { id }))
       .then((res) => {
-        let temp = res?.data?.listResellers?.items;
-        setData(temp);
-        for (let i = 0; i < temp.length; i++) {
-          for (let j = 0; j < temp[i]?.masqomats?.items?.length; j++) {
-            APICalling(
-              temp[i]?.masqomats?.items[j]?.easyId,
-              temp[i]?.masqomats?.items[j]?.id
-            ).then((res) => {
-              temp[i].masqomats.items[j].online = true;
-              if (res) {
-                let temp1 = onlineList ? [...onlineList] : [];
-                temp1.push(temp);
-                setOnlineList(temp1);
-              } else {
-                let temp2 = offlineList ? [...offlineList] : [];
-                temp2.push(temp);
-                setOfflineList(temp2);
-              }
+        console.log(res?.data?.listMasqomats);
+        let temp = res?.data?.listMasqomats?.items;
+        let tempData = data ? [...data] : [];
+        for (let j = 0; j < temp.length; j++) {
+          APICalling(temp[j]?.easyId, temp[j]?.id).then((res) => {
+            temp[j].online = res;
+            if (res) {
+              let temp1 = onlineList ? [...onlineList] : [];
+              temp1.push(temp);
+              setOnlineList(temp1);
+            } else {
+              let temp2 = offlineList ? [...offlineList] : [];
+              temp2.push(temp);
+              setOfflineList(temp2);
+            }
+            tempData.push(temp);
+            if(j === temp.length -1)
+            {
               setnew(!new1);
-              setData(temp);
-            });
-          }
+              setData(tempData);
+            }
+          });
         }
       })
       .catch((err) => {
@@ -121,30 +125,31 @@ const AuthStateApp = () => {
 
   const getListOrder = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
-      console.log("abc")
-      setVending(prev=>{
-        let temp = [...prev]
+      console.log("abc");
+      setVending((prev) => {
+        let temp = [...prev];
         for (let i = 0; i < temp?.length; i++) {
           temp[i].monthlySales = res?.data?.listOrders?.items.filter(
             (item) => temp[i]?.masqomatId === item?.masqomat?.id
-            ).length;
-          }
-          return temp;
-        })
+          ).length;
+        }
+        return temp;
+      });
     });
   };
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
   useEffect(() => {
-    getData();
-  }, []);
-  
-  useEffect(()=>{
     getListOrder();
-  }, [new1])
+  }, [new1]);
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()
       .then((res) => {
-        setUser(res?.attributes);
+        setUser(res);
+        console.log(res);
       })
       .catch((err) => {
         setUser(false);
@@ -183,33 +188,71 @@ const AuthStateApp = () => {
       },
     });
   }, []);
+  useEffect(() => {
+    if (user) {
+      setloader(true);
+      API.graphql(graphqlOperation(getMaskUser, { id: user?.attributes?.sub }))
+        .then((res) => {
+          console.log(res);
+          setverified(res?.data?.getMaskUser);
+          for (let i = 0; i < res?.data?.getMaskUser?.masqomats.length; i++) {
+            getData(res?.data?.getMaskUser?.masqomats[i]);
+            console.log(res?.data);
+            setnew(!new1);
+          }
+          setloader(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setloader(false);
+        });
+    }
+  }, [user]);
 
-  if (user?.sub)
+  if (loader)
     return (
-      <div className="App">
-        <div className="container">
-          <Navbar selectNav={selectNav} />
-          {navselection === "machine" ? (
-            <MachinePage
-              vending={vending}
-              onlineList={onlineList}
-              oflineList={offlineList}
-              data={data}
-              ListOrder={ListOrder}
-            />
-          ) : (
-            <MoneyPage changeMoney={changeMoney} data={vending} />
-          )}
-        </div>
+      <div className="loader">
+        <Loader />
       </div>
     );
-  return (
-    <div className="authentication-page">
-      <AmplifyAuthenticator>
-        <AmplifySignIn slot="sign-in" hideSignUp />
-      </AmplifyAuthenticator>
-    </div>
-  );
+  if (user?.attributes?.sub) {
+    if (verified)
+      return (
+        <div className="App">
+          <div className="container">
+            <Navbar selectNav={selectNav} />
+            {navselection === "machine" ? (
+              <MachinePage
+                vending={vending}
+                onlineList={onlineList}
+                oflineList={offlineList}
+                data={data}
+                ListOrder={ListOrder}
+              />
+            ) : (
+              <MoneyPage changeMoney={changeMoney} data={vending} />
+            )}
+          </div>
+        </div>
+      );
+    else
+      return (
+        <Form
+          setverified={setverified}
+          userId={user?.attributes?.sub}
+          username={user?.username}
+        />
+      );
+  } else
+    return (
+      <div className="authentication-page">
+        <AmplifyAuthenticator>
+          <AmplifySignIn slot="sign-in" usernameAlias="email" hideSignUp>
+            <div slot="secondary-footer-content"></div>
+          </AmplifySignIn>
+        </AmplifyAuthenticator>
+      </div>
+    );
 };
 
 export default withAuthenticator(AuthStateApp);
