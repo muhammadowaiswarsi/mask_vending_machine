@@ -13,7 +13,7 @@ import awsconfig from "./aws-exports";
 import Navbar from "./components/Navbar/Index";
 import MachinePage from "./components/MachinePage/index.js";
 import MoneyPage from "./components/MoneyPage";
-import { getMaskUser, getResellers, listOrders } from "./graphql/queries";
+import { getUser, getResellers, listOrders } from "./graphql/queries";
 import { UpdateOrders } from "./graphql/mutation";
 import { onUpdateProduct } from "./graphql/subsciption";
 import Form from "./components/Form/form";
@@ -81,8 +81,7 @@ const AuthStateApp = () => {
               setOfflineList(temp2);
             }
             tempData.push(temp);
-            if(j === temp.length -1)
-            {
+            if (j === temp.length - 1) {
               setnew(!new1);
               setData(tempData);
             }
@@ -191,21 +190,29 @@ const AuthStateApp = () => {
   useEffect(() => {
     if (user) {
       setloader(true);
-      API.graphql(graphqlOperation(getMaskUser, { id: user?.attributes?.sub }))
-        .then((res) => {
-          console.log(res);
-          setverified(res?.data?.getMaskUser);
-          for (let i = 0; i < res?.data?.getMaskUser?.masqomats.length; i++) {
-            getData(res?.data?.getMaskUser?.masqomats[i]);
-            console.log(res?.data);
-            setnew(!new1);
-          }
+      Auth.currentSession().then(res => {
+        let accessToken = res.getAccessToken()?.jwtToken
+        console.log(accessToken.jwtToken, 'accessToken')
+        fetch('https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql', {
+          method: 'POST',
+          headers: {
+            authorization: accessToken
+          },
+          body: JSON.stringify({
+            query: getUser,
+            variables: { id: user?.attributes?.sub }
+          })
+        }).then((res) => {
+          return res.json()
+        }).then((res1) => {
           setloader(false);
         })
-        .catch((err) => {
-          console.log(err);
-          setloader(false);
-        });
+          .catch((err1) => {
+            setloader(false);
+            console.log(err1)
+          })
+      })
+        .catch((err) => { console.log(err) })
     }
   }, [user]);
 
