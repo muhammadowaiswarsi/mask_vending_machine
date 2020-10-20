@@ -14,7 +14,7 @@ import Navbar from "./components/Navbar/Index";
 import MachinePage from "./components/MachinePage/index.js";
 import MoneyPage from "./components/MoneyPage";
 import { getUser, getResellers, listOrders } from "./graphql/queries";
-import { UpdateOrders } from "./graphql/mutation";
+import { createUser, UpdateOrders } from "./graphql/mutation";
 import { onUpdateProduct } from "./graphql/subsciption";
 import Form from "./components/Form/form";
 import Loader from "react-spinners/ClipLoader";
@@ -63,28 +63,31 @@ const AuthStateApp = () => {
   }, [user]);
 
   const getData = async (id) => {
+    setloader(true);
     API.graphql(graphqlOperation(getResellers, { id }))
       .then((res) => {
         console.log(res?.data?.listMasqomats);
         let temp = res?.data?.listMasqomats?.items;
-        let tempData = data ? [...data] : [];
         for (let j = 0; j < temp.length; j++) {
           APICalling(temp[j]?.easyId, temp[j]?.id).then((res) => {
-            temp[j].online = res;
-            if (res) {
-              let temp1 = onlineList ? [...onlineList] : [];
-              temp1.push(temp);
-              setOnlineList(temp1);
-            } else {
-              let temp2 = offlineList ? [...offlineList] : [];
-              temp2.push(temp);
-              setOfflineList(temp2);
-            }
-            tempData.push(temp);
-            if (j === temp.length - 1) {
-              setnew(!new1);
-              setData(tempData);
-            }
+            setData((prev) => {
+              let tempData = prev ? [...prev] : [];
+              temp[j].online = res;
+              if (res) {
+                let temp1 = onlineList ? [...onlineList] : [];
+                temp1.push(temp);
+                setOnlineList(temp1);
+              } else {
+                let temp2 = offlineList ? [...offlineList] : [];
+                temp2.push(temp);
+                setOfflineList(temp2);
+              }
+              tempData.push(...temp);
+              if (j === temp.length - 1) {
+                setnew(Date.now());
+                return tempData;
+              }
+            });
           });
         }
       })
@@ -94,39 +97,35 @@ const AuthStateApp = () => {
   };
 
   useEffect(() => {
-    const tempdata = [];
-    for (let i = 0; i < data?.length; i++) {
-      for (let j = 0; j < data[i]?.masqomats?.items.length; j++) {
-        for (
-          let k = 0;
-          k < data[i]?.masqomats?.items[j].products?.items.length;
-          k++
-        ) {
+    if (data && data?.length > 0) {
+      const tempdata = [];
+      for (let i = 0; i < data?.length; i++) {
+        console.log(data, data[i].products);
+        for (let k = 0; k < data[i]?.products?.items.length; k++) {
           tempdata.push({
-            id: data[i]?.masqomats?.items[j]?.easyId,
-            masqomatId: data[i]?.masqomats?.items[j]?.id,
-            location: data[i]?.masqomats?.items[j]?.description,
-            company: data[i]?.masqomats?.items[j]?.reseller?.companyName,
-            onlineStatus: data[i]?.masqomats?.items[j]?.online
-              ? "online"
-              : "offline",
-            availableMasks: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.stock}/208`,
-            priceNetto: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.priceNetto}`,
-            profitShare: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.profitShare}`,
-            productId: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.id}`,
-            name: `${data[i]?.masqomats?.items[j]?.products?.items[k]?.name}`,
+            id: data[i]?.easyId,
+            masqomatId: data[i]?.id,
+            location: data[i]?.description,
+            company: data[i]?.reseller?.companyName,
+            onlineStatus: data[i]?.online ? "online" : "offline",
+            availableMasks: `${data[i]?.products?.items[k]?.stock}/208`,
+            priceNetto: `${data[i]?.products?.items[k]?.priceNetto}`,
+            profitShare: `${data[i]?.products?.items[k]?.profitShare}`,
+            productId: `${data[i]?.products?.items[k]?.id}`,
+            name: `${data[i]?.products?.items[k]?.name}`,
           });
         }
       }
+      setloader(false);
+      setVending(tempdata);
     }
-    setVending(tempdata);
   }, [data, new1]);
 
   const getListOrder = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
       console.log("abc");
       setVending((prev) => {
-        let temp = [...prev];
+        let temp = prev ? [...prev] : [];
         for (let i = 0; i < temp?.length; i++) {
           temp[i].monthlySales = res?.data?.listOrders?.items.filter(
             (item) => temp[i]?.masqomatId === item?.masqomat?.id
@@ -136,9 +135,6 @@ const AuthStateApp = () => {
       });
     });
   };
-  // useEffect(() => {
-  //   getData();
-  // }, []);
 
   useEffect(() => {
     getListOrder();
@@ -187,32 +183,81 @@ const AuthStateApp = () => {
       },
     });
   }, []);
+
+  const CreateUserMethod = (input) => {
+    setloader(true);
+    Auth.currentSession()
+      .then((res) => {
+        let accessToken = res.getAccessToken()?.jwtToken;
+        console.log(accessToken.jwtToken, "accessToken");
+        fetch(
+          "https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql",
+          {
+            method: "POST",
+            headers: {
+              authorization: accessToken,
+            },
+            body: JSON.stringify({
+              query: createUser,
+              variables: { input: input },
+            }),
+          }
+        )
+          .then((res) => {
+            return res.json();
+          })
+          .then((res1) => {
+            setverified(res1?.data?.createUser);
+            setloader(false);
+          })
+          .catch((err1) => {
+            setloader(false);
+            console.log(err1);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     if (user) {
       setloader(true);
-      Auth.currentSession().then(res => {
-        let accessToken = res.getAccessToken()?.jwtToken
-        console.log(accessToken.jwtToken, 'accessToken')
-        fetch('https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql', {
-          method: 'POST',
-          headers: {
-            authorization: accessToken
-          },
-          body: JSON.stringify({
-            query: getUser,
-            variables: { id: user?.attributes?.sub }
-          })
-        }).then((res) => {
-          return res.json()
-        }).then((res1) => {
-          setloader(false);
+      Auth.currentSession()
+        .then((res) => {
+          let accessToken = res.getAccessToken()?.jwtToken;
+          console.log(accessToken.jwtToken, "accessToken");
+          fetch(
+            "https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql",
+            {
+              method: "POST",
+              headers: {
+                authorization: accessToken,
+              },
+              body: JSON.stringify({
+                query: getUser,
+                variables: { id: user?.attributes?.sub },
+              }),
+            }
+          )
+            .then((res) => {
+              return res?.json();
+            })
+            .then((res1) => {
+              setverified(res1?.data?.getUser);
+              setloader(false);
+              for (let i = 0; i < res1?.data?.getUser?.masqomats?.length; i++) {
+                getData(res1?.data?.getUser?.masqomats[i]);
+              }
+            })
+            .catch((err1) => {
+              setloader(false);
+              console.log(err1);
+            });
         })
-          .catch((err1) => {
-            setloader(false);
-            console.log(err1)
-          })
-      })
-        .catch((err) => { console.log(err) })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [user]);
 
@@ -245,6 +290,7 @@ const AuthStateApp = () => {
     else
       return (
         <Form
+          CreateUser={CreateUserMethod}
           setverified={setverified}
           userId={user?.attributes?.sub}
           username={user?.username}

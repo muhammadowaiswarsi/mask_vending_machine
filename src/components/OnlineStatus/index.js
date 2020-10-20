@@ -12,13 +12,13 @@ export default function OnlineStatus({ data }) {
         <DonutChart
           nonCompleted="#f56071"
           txtColor={
-            data?.filter((items) => items?.onlineStatus === "online").length
+            data && data?.filter((items) => items?.onlineStatus === "online").length
               ? "#85d8ab"
               : "#f56071"
           }
           completed="#85d8ab"
           value={
-            data?.filter((items) => items?.onlineStatus === "online").length
+            data && data?.filter((items) => items?.onlineStatus === "online").length
           }
           totalValue={data?.length}
           valuelabel="machines online"

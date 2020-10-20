@@ -2,7 +2,7 @@ import React from 'react'
 import "./donut-chart.css"
 
 export const DonutChart = ({size, rotateAngle, labelMarginTop, strokewidth, value, valuelabel, totalValue, nonCompleted, completed, txtColor}) => {
-      size = size ? size : 250;
+      size = size ? size : 220;
       size = (window.screen.width < 400  && size > 200) ? 150 : size;
       labelMarginTop = (window.screen.width < 400  && labelMarginTop > 200) ? 150 : labelMarginTop;
       rotateAngle = rotateAngle ? rotateAngle : 0;
