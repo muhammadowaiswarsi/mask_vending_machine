@@ -33,11 +33,11 @@ export const UpdateOrders = `
   }
 `;
 
-export const CreateMaskUser = `
-  mutation CreateMaskUser(
-      $input: CreateMaskUser!
+export const createUser = `
+  mutation createUser(
+      $input: CreateUser!
   ){
-    createMaskUser(input: $input){
+    createUser(input: $input){
       user_id
       email
       userName

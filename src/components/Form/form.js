@@ -1,8 +1,7 @@
 import { API, graphqlOperation } from "aws-amplify";
 import React, { useState } from "react";
-import { CreateMaskUser } from "../../graphql/mutation";
 import "./form.css";
-const Form = ({ userId, username, setverified }) => {
+const Form = ({ CreateUser, userId, username, setverified }) => {
   const [email, setemail] = useState("");
   const [mobNumber, setmobNumber] = useState("");
   const onSubmit = (e) => {
@@ -11,11 +10,13 @@ const Form = ({ userId, username, setverified }) => {
       user_id: userId,
       userName: username,
       email: email,
-      masqomats: []
+      masqomats: [],
     };
     if (mobNumber) input["phoneNumber"] = mobNumber;
+
+    // CreateUser(input);
     API.graphql(
-      graphqlOperation(CreateMaskUser, {
+      graphqlOperation(CreateUser, {
         input,
       })
     )
