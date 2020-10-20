@@ -116,6 +116,7 @@
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  overflow: auto;
 }
 .tenant-list-body {
   width: 45%;
