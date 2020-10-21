@@ -15,18 +15,6 @@ const Form = ({ CreateUser, userId, username, setverified }) => {
     if (mobNumber) input["phoneNumber"] = mobNumber;
 
     CreateUser(input);
-    // API.graphql(
-    //   graphqlOperation(CreateUser, {
-    //     input,
-    //   })
-    // )
-    //   .then((res) => {
-    //     console.log(res);
-    //     setverified(res?.data?.createMaskUser)
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
   return (
     <div className="form-main-Div">

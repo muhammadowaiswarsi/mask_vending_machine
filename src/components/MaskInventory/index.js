@@ -11,40 +11,26 @@ export default function MaskInventory({ data }) {
   const [emptyData, useEmptyData] = useState([]);
   const [warningData, useWarningData] = useState([]);
   const [filledData, useFilledData] = useState([]);
-  let onCreate;
   const ManagingData = (data) => {
     const emptyDataTemp = [];
     const warningDataTemp = [];
     const filledDataTemp = [];
     for (let i = 0; i < data?.length; i++) {
-      for (let j = 0; j < data[i]?.masqomats?.items?.length; j++) {
-        for (
-          let k = 0;
-          k < data[i]?.masqomats?.items[j]?.products?.items?.length;
-          k++
-          ) {
-            if (data[i]?.masqomats?.items[j]?.products?.items?.stock < 10) {
-              emptyDataTemp.push({
-                price: data[i]?.masqomats?.items[j]?.easyId,
-                stock:
-                data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
-              });
-            } else if (
-              data[i]?.masqomats?.items[j]?.products?.items?.stock < 100
-              ) {
-                warningDataTemp.push({
-                  price: data[i]?.masqomats?.items[j]?.easyId,
-                  stock:
-                  data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
-                });
-              } else {
-            filledDataTemp.push({
-              price: data[i]?.masqomats?.items[j]?.easyId,
-              stock:
-                data[i]?.masqomats?.items[j]?.products?.items[k]?.stock,
-            });
-          }
-        }
+      if (data[i]?.availableMasks.split("/")[0] < 10) {
+        emptyDataTemp.push({
+          price: data[i]?.id,
+          availableMasks: data[i]?.availableMasks.split("/")[0],
+        });
+      } else if (data[i]?.availableMasks.split("/")[0] < 100) {
+        warningDataTemp.push({
+          price: data[i]?.id,
+          availableMasks: data[i]?.availableMasks.split("/")[0],
+        });
+      } else {
+        filledDataTemp.push({
+          price: data[i]?.masqomats?.id,
+          availableMasks: data[i]?.availableMasks.split("/")[0],
+        });
       }
     }
     useEmptyData(emptyDataTemp);
@@ -54,7 +40,7 @@ export default function MaskInventory({ data }) {
   useEffect(() => {
     ManagingData(data);
   }, [data]);
-  
+
   return (
     <div className="mask-inventory">
       <p className="heading">mask inventory</p>
@@ -90,7 +76,7 @@ export default function MaskInventory({ data }) {
                     nonCompleted="#dddddd"
                     txtColor="#f56071"
                     completed="#f56071"
-                    value={item.stock}
+                    value={item?.availableMasks}
                     totalValue={208}
                     valuelabel="masks available"
                     size={80}
@@ -98,7 +84,7 @@ export default function MaskInventory({ data }) {
                     labelMarginTop={7}
                     rotateAngle={-90}
                   />
-                  <p className="chart-label">{item.price}</p>
+                  <p className="chart-label">{item?.price}</p>
                 </>
               </div>
             ))}
@@ -138,7 +124,7 @@ export default function MaskInventory({ data }) {
                     nonCompleted="#dddddd"
                     txtColor="#f5aa60"
                     completed="#f5aa60"
-                    value={item.stock}
+                    value={item?.availableMasks}
                     totalValue={208}
                     valuelabel="masks available"
                     size={80}
@@ -146,7 +132,7 @@ export default function MaskInventory({ data }) {
                     labelMarginTop={7}
                     rotateAngle={-90}
                   />
-                  <p className="chart-label">{item.price}</p>
+                  <p className="chart-label">{item?.price}</p>
                 </>
               </div>
             ))}
@@ -186,7 +172,7 @@ export default function MaskInventory({ data }) {
                     nonCompleted="#dddddd"
                     txtColor="#85d8ab"
                     completed="#85d8ab"
-                    value={item.stock}
+                    value={item?.availableMasks}
                     totalValue={208}
                     valuelabel="masks available"
                     size={80}
@@ -194,7 +180,7 @@ export default function MaskInventory({ data }) {
                     labelMarginTop={7}
                     rotateAngle={-90}
                   />
-                  <p className="chart-label">{item.price}</p>
+                  <p className="chart-label">{item?.price}</p>
                 </>
               </div>
             ))}

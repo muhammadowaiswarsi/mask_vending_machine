@@ -34,10 +34,10 @@ export const UpdateOrders = `
 `;
 
 export const createUser = `
-  mutation createUser(
-      $input: CreateUser!
+  mutation createMasqomatUser(
+      $input: CreateMasqomatUser!
   ){
-    createUser(input: $input){
+    createMasqomatUser(input: $input){
       user_id
       email
       userName

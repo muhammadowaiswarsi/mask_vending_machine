@@ -13,7 +13,7 @@ import awsconfig from "./aws-exports";
 import Navbar from "./components/Navbar/Index";
 import MachinePage from "./components/MachinePage/index.js";
 import MoneyPage from "./components/MoneyPage";
-import { getUser, getResellers, listOrders } from "./graphql/queries";
+import { getMasqomatUser, getResellers, listOrders } from "./graphql/queries";
 import { createUser, UpdateOrders } from "./graphql/mutation";
 import { onUpdateProduct } from "./graphql/subsciption";
 import Form from "./components/Form/form";
@@ -30,7 +30,7 @@ const AuthStateApp = () => {
   const [onlineList, setOnlineList] = useState(false);
   const [offlineList, setOfflineList] = useState(false);
   const [new1, setnew] = useState(false);
-  const [verified, setverified] = useState(false);
+  const [verified, setverified] = useState("loading");
   const [loader, setloader] = useState(false);
 
   const selectNav = (data) => {
@@ -66,7 +66,6 @@ const AuthStateApp = () => {
     setloader(true);
     API.graphql(graphqlOperation(getResellers, { id }))
       .then((res) => {
-        console.log(res?.data?.listMasqomats);
         let temp = res?.data?.listMasqomats?.items;
         for (let j = 0; j < temp.length; j++) {
           APICalling(temp[j]?.easyId, temp[j]?.id).then((res) => {
@@ -90,9 +89,14 @@ const AuthStateApp = () => {
             });
           });
         }
+        if (res?.data?.listMasqomats?.items.length === 0) {
+          setData([]);
+          setloader(false)
+        }
       })
       .catch((err) => {
-        console.log(err?.response);
+        setloader(false);
+        setData(false);
       });
   };
 
@@ -100,7 +104,6 @@ const AuthStateApp = () => {
     if (data && data?.length > 0) {
       const tempdata = [];
       for (let i = 0; i < data?.length; i++) {
-        console.log(data, data[i].products);
         for (let k = 0; k < data[i]?.products?.items.length; k++) {
           tempdata.push({
             id: data[i]?.easyId,
@@ -123,7 +126,6 @@ const AuthStateApp = () => {
 
   const getListOrder = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
-      console.log("abc");
       setVending((prev) => {
         let temp = prev ? [...prev] : [];
         for (let i = 0; i < temp?.length; i++) {
@@ -144,15 +146,14 @@ const AuthStateApp = () => {
     Auth.currentAuthenticatedUser()
       .then((res) => {
         setUser(res);
-        console.log(res);
       })
       .catch((err) => {
         setUser(false);
       });
   }, [AuthState]);
 
-  const changeMoney = (id, priceNetto, profitShare) => {
-    API.graphql(
+  const changeMoney =async (id, priceNetto, profitShare) => {
+    await API.graphql(
       graphqlOperation(UpdateOrders, { input: { id, priceNetto, profitShare } })
     );
   };
@@ -163,10 +164,7 @@ const AuthStateApp = () => {
         setVending((prevState) => {
           let temp = [...prevState];
           for (let i = 0; i < prevState.length; i++) {
-            console.log(
-              temp[i]?.masqomatId,
-              createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
-            );
+            
             if (
               temp[i]?.masqomatId ===
               createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
@@ -179,84 +177,42 @@ const AuthStateApp = () => {
             }
           }
         });
-        console.log(createUserData?.value?.data?.onUpdateProduct);
       },
     });
   }, []);
 
   const CreateUserMethod = (input) => {
     setloader(true);
-    Auth.currentSession()
-      .then((res) => {
-        let accessToken = res.getAccessToken()?.jwtToken;
-        console.log(accessToken.jwtToken, "accessToken");
-        fetch(
-          "https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql",
-          {
-            method: "POST",
-            headers: {
-              authorization: accessToken,
-            },
-            body: JSON.stringify({
-              query: createUser,
-              variables: { input: input },
-            }),
-          }
-        )
-          .then((res) => {
-            return res.json();
-          })
-          .then((res1) => {
-            setverified(res1?.data?.createUser);
-            setloader(false);
-          })
-          .catch((err1) => {
-            setloader(false);
-            console.log(err1);
-          });
+    API.graphql(graphqlOperation(createUser, { input: input }))
+
+      .then((res1) => {
+        setverified(res1?.data?.createMasqomatUser);
+        setloader(false);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err1) => {
+        setloader(false);
       });
   };
 
   useEffect(() => {
     if (user) {
       setloader(true);
-      Auth.currentSession()
-        .then((res) => {
-          let accessToken = res.getAccessToken()?.jwtToken;
-          console.log(accessToken.jwtToken, "accessToken");
-          fetch(
-            "https://q2k7euxrszbf3aya7whkskxv6y.appsync-api.eu-central-1.amazonaws.com/graphql",
-            {
-              method: "POST",
-              headers: {
-                authorization: accessToken,
-              },
-              body: JSON.stringify({
-                query: getUser,
-                variables: { id: user?.attributes?.sub },
-              }),
-            }
-          )
-            .then((res) => {
-              return res?.json();
-            })
-            .then((res1) => {
-              setverified(res1?.data?.getUser);
-              setloader(false);
-              for (let i = 0; i < res1?.data?.getUser?.masqomats?.length; i++) {
-                getData(res1?.data?.getUser?.masqomats[i]);
-              }
-            })
-            .catch((err1) => {
-              setloader(false);
-              console.log(err1);
-            });
+      API.graphql(
+        graphqlOperation(getMasqomatUser, { id: user?.attributes?.sub })
+      )
+        .then((res1) => {
+          setverified(res1?.data?.getMasqomatUser);
+          setloader(false);
+          for (
+            let i = 0;
+            i < res1?.data?.getMasqomatUser?.masqomats?.length;
+            i++
+          ) {
+            getData(res1?.data?.getMasqomatUser?.masqomats[i]);
+          }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err1) => {
+          setloader(false);
         });
     }
   }, [user]);
@@ -268,7 +224,7 @@ const AuthStateApp = () => {
       </div>
     );
   if (user?.attributes?.sub) {
-    if (verified)
+    if (verified !== "loading" && verified)
       return (
         <div className="App">
           <div className="container">
@@ -278,7 +234,6 @@ const AuthStateApp = () => {
                 vending={vending}
                 onlineList={onlineList}
                 oflineList={offlineList}
-                data={data}
                 ListOrder={ListOrder}
               />
             ) : (

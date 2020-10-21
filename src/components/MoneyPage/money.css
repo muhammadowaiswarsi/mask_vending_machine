@@ -146,16 +146,18 @@
 .tenant-list-part th {
   width: 33%;
 } */
-.tenant-list-part td:nth-child(2), .tenant-list-part th:nth-child(2) {
+.tenant-list-part td:nth-child(2),
+.tenant-list-part th:nth-child(2) {
   width: 40%;
   padding: 0 0.5em;
 }
-.tenant-list-part td:nth-child(3), .tenant-list-part th:nth-child(3) {
+.tenant-list-part td:nth-child(3),
+.tenant-list-part th:nth-child(3) {
   width: 30%;
   padding: 0 0.5em;
 }
 .roundPart {
-  width: 30px !important
+  width: 30px !important;
 }
 .tenant-lists {
   display: flex;
@@ -199,6 +201,9 @@
   border-bottom: 3px solid black;
 }
 .tenant-changing-part .set-changes button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 30px;
   padding: 0.4em;
   background-color: black;

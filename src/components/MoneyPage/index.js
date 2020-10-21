@@ -1,12 +1,14 @@
 import { AmplifySignOut } from "@aws-amplify/ui-react";
 import { API, graphqlOperation } from "aws-amplify";
 import React, { useEffect, useState } from "react";
+import Loader from "react-spinners/ClipLoader";
 import { listOrders } from "../../graphql/queries";
 import "./money.css";
 
 export default function MoneyPage({ changeMoney, data }) {
   const [allChecked, setallChecked] = useState(false);
   const [listOrder, setListOrder] = useState(false);
+  const [loading, setloading] = useState(false);
   const [lists, changeLists] = useState([]);
   const [templists, changeTempLists] = useState([]);
   const [maskPrice, setMaskPrice] = useState("");
@@ -29,13 +31,11 @@ export default function MoneyPage({ changeMoney, data }) {
   };
   const GettingApi = () => {
     API.graphql(graphqlOperation(listOrders)).then((res) => {
-      console.log(res);
       let temp = { profit: 0, price: 0 };
       let temp1 = 0;
       for (let i = 0; i < templists?.length; i++) {
         for (let j = 0; j < templists?.length; j++) {
           for (let k = 0; k < res?.data?.listOrders?.items?.length; k++) {
-            console.log(temp);
             if (
               templists[i].masqomatId ===
               res?.data?.listOrders?.items[k]?.masqomat?.id
@@ -99,12 +99,14 @@ export default function MoneyPage({ changeMoney, data }) {
         </div>
         <div>
           <p className="sales-headings">total mask sold</p>
-          <p className="sales-values sales-num-values">{listOrder?.total}</p>
+          <p className="sales-values sales-num-values">
+            {listOrder?.total ? listOrder?.total : 0}
+          </p>
         </div>
         <div>
           <p className="sales-headings">total sales</p>
           <p className="sales-values sales-num-values">
-            {Number(listOrder?.price)?.toFixed(2)}€
+            {listOrder?.price ? listOrder?.price?.toFixed(2) : 0}€
           </p>
         </div>
         <div>
@@ -182,7 +184,7 @@ export default function MoneyPage({ changeMoney, data }) {
                   onChange={(e) => setMaskPrice(e.target.value)}
                   type="text"
                 />
-                <span>€</span>
+                <span>%</span>
               </div>
               <div>
                 <p>profit share:</p>
@@ -192,17 +194,19 @@ export default function MoneyPage({ changeMoney, data }) {
                   onChange={(e) => setProfitShare(e.target.value)}
                   type="text"
                 />
-                <span>€</span>
+                <span>%</span>
               </div>
               <div className="set-changes">
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     if (id) {
-                      changeMoney(id, maskPrice, profitShare);
+                      setloading(true);
+                      await changeMoney(id, maskPrice, profitShare);
+                      setloading(false);
                     }
                   }}
                 >
-                  setchanges
+                  {loading ? <Loader color="white" /> : "set changes"}
                 </button>
               </div>
             </div>

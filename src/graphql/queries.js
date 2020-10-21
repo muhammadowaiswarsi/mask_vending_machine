@@ -25,9 +25,9 @@ query listMasqomats($id: ID!) {
   }
 }
 `;
-export const getUser = `
-query getUser($id: ID!) {
-  getUser(user_id: $id) {
+export const getMasqomatUser = `
+query getMasqomatUser($id: ID!) {
+  getMasqomatUser(user_id: $id) {
     email
     masqomats
     userName
