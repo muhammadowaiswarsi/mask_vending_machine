@@ -34,16 +34,18 @@ export default function MoneyPage({ changeMoney, data }) {
       let temp = { profit: 0, price: 0 };
       let temp1 = 0;
       for (let i = 0; i < templists?.length; i++) {
-        for (let j = 0; j < templists?.length; j++) {
-          for (let k = 0; k < res?.data?.listOrders?.items?.length; k++) {
-            if (
-              templists[i].masqomatId ===
-              res?.data?.listOrders?.items[k]?.masqomat?.id
-            ) {
-              temp.profit += Number(templists[i]?.profitShare);
-              temp.price += Number(templists[i]?.priceNetto);
-              ++temp1;
-            }
+        for (let k = 0; k < res?.data?.listOrders?.items?.length; k++) {
+          console.log(
+            res?.data?.listOrders?.items[k]?.masqomat?.id,
+            templists[i]?.masqomatId
+          );
+          if (
+            templists[i].masqomatId ===
+            res?.data?.listOrders?.items[k]?.masqomat?.id
+          ) {
+            temp.profit += Number(templists[i]?.profitShare);
+            temp.price += Number(templists[i]?.priceNetto);
+            ++temp1;
           }
         }
       }
@@ -59,29 +61,31 @@ export default function MoneyPage({ changeMoney, data }) {
     changeLists(data);
   }, [data]);
   const updateChecked = (i) => {
-    if (i || i === 0) {
-      if (lists[i].checked) {
-        setMaskPrice("");
-        setProfitShare("");
-        setId("");
-        changeTempLists([]);
-      } else {
-        if (templists.length === 0) {
-          setMaskPrice(lists[i].priceNetto);
-          setProfitShare(lists[i]?.profitShare);
-          setId(lists[i]?.productId);
-        } else {
+    if (!allChecked) {
+      if (i || i === 0) {
+        if (lists[i].checked) {
+          setMaskPrice("");
           setProfitShare("");
           setId("");
-          setMaskPrice("");
+          changeTempLists([]);
+        } else {
+          if (templists.length === 0) {
+            setMaskPrice(lists[i].priceNetto);
+            setProfitShare(lists[i]?.profitShare);
+            setId(lists[i]?.productId);
+          } else {
+            setProfitShare("");
+            setId("");
+            setMaskPrice("");
+          }
+          const temp = [...templists];
+          temp.push(lists[i]);
+          changeTempLists(temp);
         }
-        const temp = [...templists];
-        temp.push(lists[i]);
-        changeTempLists(temp);
+        const temp = [...lists];
+        temp[i].checked = !temp[i].checked;
+        changeLists(temp);
       }
-      const temp = [...lists];
-      temp[i].checked = !temp[i].checked;
-      changeLists(temp);
     }
   };
   return (
@@ -112,7 +116,10 @@ export default function MoneyPage({ changeMoney, data }) {
         <div>
           <p className="sales-headings">total profit</p>
           <p className="sales-values sales-num-values">
-            {listOrder?.profit ? listOrder?.profit?.toFixed(2) : 0}%
+            {listOrder?.profit && listOrder?.profit !== 0
+              ? listOrder?.profit?.toFixed(2)
+              : 0}
+            %
           </p>
         </div>
       </div>
@@ -184,7 +191,7 @@ export default function MoneyPage({ changeMoney, data }) {
                   onChange={(e) => setMaskPrice(e.target.value)}
                   type="text"
                 />
-                <span>%</span>
+                <span>€</span>
               </div>
               <div>
                 <p>profit share:</p>
