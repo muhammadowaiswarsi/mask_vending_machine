@@ -1,4 +1,3 @@
-import { API, graphqlOperation } from "aws-amplify";
 import React, { useState } from "react";
 import "./form.css";
 const Form = ({ CreateUser, userId, username, setverified }) => {

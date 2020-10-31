@@ -1,0 +1,2 @@
+(this.webpackJsonpmask_vending_machines_app=this.webpackJsonpmask_vending_machines_app||[]).push([[16],{331:function(n,e,t){"use strict";t.r(e),t.d(e,"amplify_container",(function(){return s}));var i=t(14),s=function(){function n(n){Object(i.k)(this,n)}return n.prototype.render=function(){return Object(i.i)(i.b,null,Object(i.i)("slot",null))},n}();s.style=":host{display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;height:100vh}"}}]);
+//# sourceMappingURL=16.f3219a84.chunk.js.map

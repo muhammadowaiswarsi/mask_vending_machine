@@ -4,8 +4,6 @@ import Amplify, { Auth, API, graphqlOperation } from "aws-amplify";
 import {
   AmplifyAuthenticator,
   AmplifySignIn,
-  AmplifyForgotPassword,
-  AmplifyConfirmSignIn,
   withAuthenticator,
 } from "@aws-amplify/ui-react";
 import { AuthState } from "@aws-amplify/ui-components";
@@ -27,7 +25,7 @@ const AuthStateApp = () => {
   const [navselection, setnavselection] = useState("machine");
   const [data, setData] = useState(false);
   const [vending, setVending] = useState(false);
-  const [ListOrder, setListOrder] = useState(false);
+  const [ListOrder] = useState(false);
   const [onlineList, setOnlineList] = useState(false);
   const [offlineList, setOfflineList] = useState(false);
   const [new1, setnew] = useState(false);
@@ -42,7 +40,7 @@ const AuthStateApp = () => {
     try {
       const uniqClientId = masqomatId;
       const result = await Axios({
-        url: "https://arcane-plains-65295.herokuapp.com/status",
+        url: "https://cors-anywhere.herokuapp.com/https://arcane-plains-65295.herokuapp.com/status",
         method: "POST",
         data: {
           masqomatEasyId: masqomatEasyId,
@@ -86,7 +84,7 @@ const AuthStateApp = () => {
               }
               tempData.push(...temp);
               if (j === temp.length - 1) {
-                setnew(Date.now());
+                // setnew(Date.now());
                 return tempData;
               }
             });
@@ -124,6 +122,7 @@ const AuthStateApp = () => {
       }
       setloader(false);
       setVending(tempdata);
+      getListOrder()
     }
   }, [data, new1]);
 
@@ -141,9 +140,9 @@ const AuthStateApp = () => {
     });
   };
 
-  useEffect(() => {
-    getListOrder();
-  }, [new1]);
+  // useEffect(() => {
+  //   getListOrder();
+  // }, [new1, vending]);
 
   useEffect(() => {
     Auth.currentAuthenticatedUser()

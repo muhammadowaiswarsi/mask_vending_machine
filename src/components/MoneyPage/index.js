@@ -173,7 +173,7 @@ export default function MoneyPage({ changeMoney, data }) {
                           <label htmlFor={"checkbox" + i + 1}></label>
                         </div>
                       </td>
-                      <td>{item?.name}</td>
+                      <td>{item?.location}</td>
                       <td>{item?.profitShare}%</td>
                       <td>{item?.priceNetto}€</td>
                     </tr>

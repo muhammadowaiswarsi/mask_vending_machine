@@ -148,12 +148,12 @@
 } */
 .tenant-list-part td:nth-child(2),
 .tenant-list-part th:nth-child(2) {
-  width: 40%;
+  width: 60%;
   padding: 0 0.5em;
 }
 .tenant-list-part td:nth-child(3),
 .tenant-list-part th:nth-child(3) {
-  width: 30%;
+  width: 15%;
   padding: 0 0.5em;
 }
 .roundPart {

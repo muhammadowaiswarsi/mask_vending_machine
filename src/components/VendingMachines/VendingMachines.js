@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from "aws-amplify";
+import React from "react";
 import "./style.css";
 import { ClipLoader } from "react-spinners";
 
@@ -48,7 +47,7 @@ export default function VendingMachines({ ListOrder, data }) {
                     >
                       {item.availableMasks}
                     </td>
-                    <td>{item?.monthlySales}€</td>
+                    <td>{item?.monthlySales ? item?.monthlySales : 0}€</td>
                   </tr>
                 ))}
               </tbody>

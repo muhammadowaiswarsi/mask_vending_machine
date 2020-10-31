@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from "aws-amplify";
 import { DonutChart } from "../DonutChart/DonutChart";
 import { Collapse } from "react-bootstrap";
 import "./style.css";
