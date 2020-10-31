@@ -18,6 +18,7 @@ import { createUser, UpdateOrders } from "./graphql/mutation";
 import { onUpdateProduct } from "./graphql/subsciption";
 import Form from "./components/Form/form";
 import Loader from "react-spinners/ClipLoader";
+import Axios from "axios";
 
 Amplify.configure(awsconfig);
 
@@ -39,15 +40,16 @@ const AuthStateApp = () => {
 
   const APICalling = async (masqomatEasyId, masqomatId) => {
     try {
-      const uniqClientId = Date.now().toString() + masqomatId;
-      const result = await API.post("orderlambda", "/status", {
-        body: {
+      const uniqClientId = masqomatId;
+      const result = await Axios({
+        url: "https://arcane-plains-65295.herokuapp.com/status",
+        method: "POST",
+        data: {
           masqomatEasyId: masqomatEasyId,
           clientId: uniqClientId,
         },
       });
-
-      if (result?.toLowerCase() === "online") {
+      if (result?.data?.toLowerCase() === "online") {
         return true;
       } else {
         //NOT ONLINE
@@ -58,9 +60,9 @@ const AuthStateApp = () => {
       //NOT ONLINE
     }
   };
-  useEffect(() => {
-    APICalling();
-  }, [user]);
+  // useEffect(() => {
+  //   if (verified) APICalling();
+  // }, [user, verified]);
 
   const getData = async (id) => {
     setloader(true);
@@ -69,6 +71,7 @@ const AuthStateApp = () => {
         let temp = res?.data?.listMasqomats?.items;
         for (let j = 0; j < temp.length; j++) {
           APICalling(temp[j]?.easyId, temp[j]?.id).then((res) => {
+            console.log(res, "status")
             setData((prev) => {
               let tempData = prev ? [...prev] : [];
               temp[j].online = res;
@@ -91,7 +94,7 @@ const AuthStateApp = () => {
         }
         if (res?.data?.listMasqomats?.items.length === 0) {
           setData([]);
-          setloader(false)
+          setloader(false);
         }
       })
       .catch((err) => {
@@ -152,7 +155,7 @@ const AuthStateApp = () => {
       });
   }, [AuthState]);
 
-  const changeMoney =async (id, priceNetto, profitShare) => {
+  const changeMoney = async (id, priceNetto, profitShare) => {
     await API.graphql(
       graphqlOperation(UpdateOrders, { input: { id, priceNetto, profitShare } })
     );
@@ -164,7 +167,6 @@ const AuthStateApp = () => {
         setVending((prevState) => {
           let temp = [...prevState];
           for (let i = 0; i < prevState.length; i++) {
-            
             if (
               temp[i]?.masqomatId ===
               createUserData?.value?.data?.onUpdateProduct?.masqomat?.id
